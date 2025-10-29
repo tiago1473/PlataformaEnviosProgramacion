@@ -1,14 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="CONTROLLER_NAME"
-            prefHeight="400.0" prefWidth="600.0">
 
+<AnchorPane prefHeight="650.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.GestionUsuarioController">
+   <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#efefef" height="46.0" layoutX="12.0" layoutY="14.0" stroke="BLACK" strokeType="INSIDE" width="776.0" />
+      <Label layoutX="337.0" layoutY="14.0" text="Gestion Usuarios" textAlignment="CENTER" textOverrun="CLIP">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="363.0" layoutY="39.0" text="SameDay" textAlignment="CENTER" textOverrun="CLIP">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#efefef" height="156.0" layoutX="12.0" layoutY="75.0" stroke="BLACK" strokeType="INSIDE" width="776.0" />
+      <GridPane layoutX="23.0" layoutY="81.0" prefHeight="107.0" prefWidth="754.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="382.0" minWidth="150.0" prefWidth="150.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="590.4000244140625" minWidth="10.0" prefWidth="590.4000244140625" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Documento Identificacion" />
+            <Label text="Nombre" GridPane.rowIndex="1" />
+            <Label text="Telefono" GridPane.rowIndex="2" />
+            <Label text="Email" GridPane.rowIndex="3" />
+            <TextField fx:id="txtIdUsuario" GridPane.columnIndex="1" />
+            <TextField fx:id="txtNombreUsuario" promptText="Ingrese nombre" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="txtTelefonoUsuario" promptText="Ingrese telefono" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="txtEmailUsuario" promptText="Ingrese email" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         </children>
+      </GridPane>
+      <Button layoutX="683.0" layoutY="198.0" mnemonicParsing="false" onAction="#actualizarUsuario" prefHeight="26.0" prefWidth="90.0" text="Actualizar" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#efefef" height="363.0" layoutX="12.0" layoutY="240.0" stroke="BLACK" strokeType="INSIDE" width="776.0" />
+      <GridPane layoutX="23.0" layoutY="263.0" prefHeight="107.0" prefWidth="754.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="382.0" minWidth="137.60001220703126" prefWidth="159.999951171875" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="616.7999877929688" minWidth="10.0" prefWidth="595.2000488281251" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Id Direccion" />
+            <Label text="Alias" GridPane.rowIndex="1" />
+            <Label text="Calle" GridPane.rowIndex="2" />
+            <Label text="Ciudad" GridPane.rowIndex="3" />
+            <TextField fx:id="txtIdDireccion" GridPane.columnIndex="1" />
+            <TextField fx:id="txtAliasDireccion" promptText="Ingrese alias" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="txtCalleDireccion" promptText="Ingrese calle" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="txtCiudadDireccion" promptText="Ingrese ciudad" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         </children>
+      </GridPane>
+      <Button layoutX="686.0" layoutY="385.0" mnemonicParsing="false" onAction="#limpiarTabla" prefHeight="26.0" prefWidth="90.0" text="Limpiar" />
+      <Button layoutX="483.0" layoutY="385.0" mnemonicParsing="false" onAction="#actualizarDireccion" prefHeight="26.0" prefWidth="90.0" text="Actualizar" />
+      <Button layoutX="584.0" layoutY="385.0" mnemonicParsing="false" onAction="#EliminarDireccion" prefHeight="26.0" prefWidth="90.0" text="Eliminar" />
+      <Button layoutX="380.0" layoutY="385.0" mnemonicParsing="false" onAction="#agregarDireccion" prefHeight="26.0" prefWidth="90.0" text="Agregar" />
+      <TableView layoutX="23.0" layoutY="422.0" prefHeight="169.0" prefWidth="754.0">
+        <columns>
+          <TableColumn fx:id="colId" prefWidth="102.39999389648438" text="Id" />
+          <TableColumn fx:id="colAlias" prefWidth="147.199951171875" text="Alias" />
+            <TableColumn fx:id="colCalle" prefWidth="127.199951171875" text="Calle" />
+            <TableColumn fx:id="colCiudad" prefWidth="128.0" text="Ciudad" />
+            <TableColumn fx:id="colLatitud" prefWidth="117.60003662109375" text="Latitud" />
+            <TableColumn fx:id="colLongitud" prefWidth="135.99993896484375" text="Longitud" />
+        </columns>
+      </TableView>
+      <Button layoutX="12.0" layoutY="611.0" mnemonicParsing="false" onAction="#regresarGestionUsuario" prefHeight="26.0" prefWidth="90.0" text="Regresar" />
+   </children>
 </AnchorPane>

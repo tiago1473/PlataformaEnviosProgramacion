@@ -1,43 +1,48 @@
-package models;
+package models.DTO;
+import models.Direccion;
+import models.Envio;
 import java.util.ArrayList;
 
-public class Usuario {
-    private String id;
+
+public class UsuarioDTO {
     private String password;
+    private String id;
     private String nombre;
     private String correo;
     private String telefono;
     private ArrayList<Envio> envios;
     private ArrayList<Direccion> direccion;
 
-    public Usuario(String id, String password, String nombre, String correo, String telefono) {
-        this.id = id;
+    public UsuarioDTO() {}
+
+    public UsuarioDTO(String password, String id, String nombre, String correo, String telefono, ArrayList<Envio> envios, ArrayList<Direccion> direccion) {
         this.password = password;
+        this.id = id;
         this.nombre = nombre;
         this.correo = correo;
         this.telefono = telefono;
-        this.envios = new ArrayList<>();
-        this.direccion = new ArrayList<>();
-    }
-
-    public String getId() {
-        return this.id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+        this.envios = envios;
+        this.direccion = direccion;
     }
 
     public String getPassword() {
-        return this.password;
+        return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getNombre() {
-        return this.nombre;
+        return nombre;
     }
 
     public void setNombre(String nombre) {
@@ -45,7 +50,7 @@ public class Usuario {
     }
 
     public String getCorreo() {
-        return this.correo;
+        return correo;
     }
 
     public void setCorreo(String correo) {
@@ -53,7 +58,7 @@ public class Usuario {
     }
 
     public String getTelefono() {
-        return this.telefono;
+        return telefono;
     }
 
     public void setTelefono(String telefono) {
@@ -61,7 +66,7 @@ public class Usuario {
     }
 
     public ArrayList<Envio> getEnvios() {
-        return this.envios;
+        return envios;
     }
 
     public void setEnvios(ArrayList<Envio> envios) {
@@ -69,20 +74,10 @@ public class Usuario {
     }
 
     public ArrayList<Direccion> getDireccion() {
-        return this.direccion;
+        return direccion;
     }
 
     public void setDireccion(ArrayList<Direccion> direccion) {
         this.direccion = direccion;
-    }
-
-    @Override
-    public String toString() {
-        return "Usuario: "+
-                "\nId: " + this.id+
-                "\nPassword: " + this.password +
-                "\nNombre: " + this.nombre +
-                "\nCorreo: " + this.correo +
-                "\nTelefono: " + this.telefono;
     }
 }

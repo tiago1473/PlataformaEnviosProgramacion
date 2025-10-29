@@ -7,12 +7,18 @@ public class Direccion {
     private String ciudad;
     private Coordenada coordenada;
 
-    public Direccion(String idDireccion, String alias, String calle, String ciudad) {
-        this.idDireccion = idDireccion;
+    public Direccion(String alias, String calle, String ciudad) {
+        this.idDireccion = crearId(ciudad, calle);
         this.alias = alias;
         this.calle = calle;
         this.ciudad = ciudad;
         this.coordenada = new Coordenada();
+    }
+
+    public String crearId(String ciudad, String calle) {
+        String ciudadCode = ciudad.length() >= 3 ? ciudad.substring(0, 3) : ciudad;
+        String calleCode = calle.length() >= 3 ? calle.substring(0, 3) : calle;
+        return "DIR-" + ciudadCode.toUpperCase() + "-" + calleCode.toUpperCase();
     }
 
     public String getIdDireccion() {

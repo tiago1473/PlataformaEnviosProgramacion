@@ -1,11 +1,9 @@
-package models;
+package models.DTO;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import models.Direccion;
+import models.EstadoEnvio;
 
-public class Envio {
-    public static float contador = 1;
-    private String id;
+public class EnvioDTO {
     private Direccion origen;
     private Direccion destino;
     private double peso;
@@ -14,38 +12,22 @@ public class Envio {
     private double alto;
     private double costo;
     private EstadoEnvio estado;
-    private LocalDateTime fechaCreacion;
-    private LocalDateTime fechaEstimadaEntrega;
-    private LocalDateTime fechaEntrega;
-    private ArrayList<Incidencia> incidencias;
     private boolean seguro;
     private boolean fragil;
     private boolean firma;
     private boolean prioridad;
 
-    public Envio(EnvioBuilder builder) {
-        this.id = "E - 0" + contador;
-        contador += 1;
-        this.origen = builder.origen;
-        this.destino = builder.destino;
-        this.peso = builder.peso;
-        this.largo = builder.largo;
-        this.ancho = builder.ancho;
-        this.alto = builder.alto;
-        this.estado = builder.estado;
-        this.seguro = builder.seguro;
-        this.fragil = builder.fragil;
-        this.firma = builder.firma;
-        this.prioridad = builder.prioridad;
-        this.incidencias = new ArrayList<>();
-    }
+    public EnvioDTO (){}
 
-    public String getId() {
-        return this.id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public EnvioDTO(Direccion origen, Direccion destino, double peso, double largo,
+                    double ancho, double alto, EstadoEnvio estado) {
+        this.origen = origen;
+        this.destino = destino;
+        this.peso = peso;
+        this.largo = largo;
+        this.ancho = ancho;
+        this.alto = alto;
+        this.estado = estado;
     }
 
     public Direccion getOrigen() {
@@ -55,6 +37,8 @@ public class Envio {
     public void setOrigen(Direccion origen) {
         this.origen = origen;
     }
+
+
 
     public Direccion getDestino() {
         return this.destino;
@@ -96,44 +80,12 @@ public class Envio {
         this.alto = alto;
     }
 
-    public double getCosto() {
-        return this.costo;
-    }
-
-    public void setCosto(double costo) {
-        this.costo = costo;
-    }
-
     public EstadoEnvio getEstado() {
         return this.estado;
     }
 
     public void setEstado(EstadoEnvio estado) {
         this.estado = estado;
-    }
-
-    public LocalDateTime getFechaCreacion() {
-        return this.fechaCreacion;
-    }
-
-    public void setFechaCreacion(LocalDateTime fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-
-    public LocalDateTime getFechaEstimadaEntrega() {
-        return this.fechaEstimadaEntrega;
-    }
-
-    public void setFechaEstimadaEntrega(LocalDateTime fechaEstimadaEntrega) {
-        this.fechaEstimadaEntrega = fechaEstimadaEntrega;
-    }
-
-    public LocalDateTime getFechaEntrega() {
-        return this.fechaEntrega;
-    }
-
-    public void setFechaEntrega(LocalDateTime fechaEntrega) {
-        this.fechaEntrega = fechaEntrega;
     }
 
     public boolean isSeguro() {
