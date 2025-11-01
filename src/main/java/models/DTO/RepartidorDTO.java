@@ -1,23 +1,23 @@
-package models;
+package models.DTO;
 
-import java.util.ArrayList;
+import models.EstadoRepartidor;
 
-public class Repartidor {
+public class RepartidorDTO {
     private String id;
     private String nombre;
     private String telefono;
     private EstadoRepartidor estado;
-    private ArrayList<Envio> envios;
+    private double latitud;
+    private double longitud;
+    private int radio;
     private int enviosAsignados;
-    private ZonaCobertura zonaCobertura;
 
-    public Repartidor(String id, String nombre,String telefono, EstadoRepartidor estado) {
+    public RepartidorDTO(String id, String nombre,String telefono, EstadoRepartidor estado, int enviosAsignados) {
         this.id=id;
         this.nombre=nombre;
         this.telefono=telefono;
         this.estado=estado;
-        this.zonaCobertura=new ZonaCobertura();
-        this.envios=new ArrayList<>();
+        this.enviosAsignados=enviosAsignados;
     }
 
     public String getId() {
@@ -36,16 +36,20 @@ public class Repartidor {
         return estado;
     }
 
-    public ArrayList<Envio> getEnvios() {
-        return envios;
+    public double getLatitud() {
+        return latitud;
     }
 
-    public ZonaCobertura getZonaCobertura() {
-        return zonaCobertura;
+    public double getLongitud() {
+        return longitud;
+    }
+
+    public int getRadio() {
+        return radio;
     }
 
     public int getEnviosAsignados() {
-        return envios.size();
+        return enviosAsignados;
     }
 
     public void setId(String id) {
@@ -64,11 +68,19 @@ public class Repartidor {
         this.estado = estado;
     }
 
-    public void addEnvios(Envio envio) {
-        this.envios.add(envio);
+    public void setLatitud(double latitud) {
+        this.latitud = latitud;
     }
 
-    public void setZonaCobertura(ZonaCobertura zonaCobertura) {
-        this.zonaCobertura = zonaCobertura;
+    public void setLongitud(double longitud) {
+        this.longitud = longitud;
     }
+
+   public void setRadio(int radio) {
+        this.radio = radio;
+   }
+
+   public void setEnviosAsignados(int enviosAsignados) {
+        this.enviosAsignados = enviosAsignados;
+   }
 }

@@ -11,6 +11,7 @@ public class PlataformaEnvios {
     private PlataformaEnvios() {
         repartidores = new ArrayList<>();
         usuarios = new ArrayList<>();
+        envios = new ArrayList<>();
     }
 
     public static PlataformaEnvios getInstancia() {

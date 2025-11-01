@@ -70,9 +70,11 @@
             <HBox alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="358.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <children>
                   <Label prefHeight="18.0" prefWidth="48.0" text=" Latitud" />
-                  <Label fx:id="labelLatitud" prefHeight="18.0" prefWidth="64.0" />
+                  <Label fx:id="lblLatitud" prefHeight="18.0" prefWidth="64.0" />
                   <Label prefHeight="18.0" prefWidth="60.0" text="Longitud" />
-                  <Label fx:id="labelLongitud" prefHeight="18.0" prefWidth="82.0" />
+                  <Label fx:id="lblLongitud" prefHeight="18.0" prefWidth="64.0" />
+                  <Label prefHeight="18.0" prefWidth="46.0" text="Radio" />
+                  <Label fx:id="lblRadio" prefHeight="18.0" prefWidth="64.0" />
                </children>
             </HBox>
          </children>
@@ -99,8 +101,8 @@
             <TableColumn prefWidth="102.400146484375" text="Nombre" />
         </columns>
       </TableView>
-      <Button layoutX="29.0" layoutY="546.0" mnemonicParsing="false" onAction="#regresarVista" prefHeight="26.0" prefWidth="228.0" text="Regresar a vista Administrador" />
-      <Label fx:id="labelMensaje" layoutX="443.0" layoutY="550.0" prefHeight="18.0" prefWidth="335.0" textFill="RED" />
+      <Button layoutX="547.0" layoutY="546.0" mnemonicParsing="false" onAction="#regresarVista" prefHeight="26.0" prefWidth="228.0" text="Regresar a vista Administrador" />
+      <Label fx:id="lblMensaje" layoutX="25.0" layoutY="550.0" prefHeight="18.0" prefWidth="335.0" textFill="RED" />
       <Label layoutX="365.0" layoutY="37.0" text="SameDay" textAlignment="CENTER" textOverrun="CLIP">
          <font>
             <Font size="15.0" />
