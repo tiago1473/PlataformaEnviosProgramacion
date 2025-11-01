@@ -70,6 +70,7 @@ public class AppSetup {
         repartidor2.addEnvios(envio3);
         repartidor3.addEnvios(envio4);
         repartidor1.addEnvios(envio5);
+        repartidor3.addEnvios(envio1);
 
     }
 

@@ -14,9 +14,11 @@ import java.util.List;
 public class RepartidorService {
 
     private final PlataformaEnvios plataformaEnvios;
+    private final EnvioService envioService;
 
     public RepartidorService() {
         this.plataformaEnvios = PlataformaEnvios.getInstancia();
+        this.envioService = new EnvioService();
     }
 
     /*Create*/
@@ -83,5 +85,16 @@ public class RepartidorService {
     public RepartidorDTO buscarRepartidorPorCedula(String id) {
         Repartidor repartidor = buscarRepartidorEntity(id);
         return repartidor != null ? RepartidorMapper.toDTO(repartidor) : null;
+    }
+
+    public boolean eliminarEnvioRepartidor(String idRepartidor,String idEnvio) {
+        Repartidor repartidor = buscarRepartidorEntity(idRepartidor);
+        Envio envio = envioService.buscarEnvioEntity(idEnvio);
+        if (repartidor == null|| envio==null) {
+            return false;
+        }
+        repartidor.getEnvios().remove(envio);
+        return true;
+
     }
 }

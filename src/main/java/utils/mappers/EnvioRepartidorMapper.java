@@ -1,7 +1,9 @@
 package utils.mappers;
 
 import models.DTO.EnvioRepartidorDTO;
+import models.DTO.RepartidorDTO;
 import models.Envio;
+import models.Repartidor;
 
 
 public class EnvioRepartidorMapper {

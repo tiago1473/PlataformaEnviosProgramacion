@@ -11,6 +11,7 @@ import models.DTO.EnvioRepartidorDTO;
 import models.DTO.RepartidorDTO;
 import models.EstadoRepartidor;
 import service.facade.AdminFacade;
+import utils.mappers.EnvioRepartidorMapper;
 import utils.mappers.RepartidorMapper;
 
 import java.util.Optional;
@@ -43,6 +44,7 @@ public class GestionRepartidorController {
     private ObservableList<RepartidorDTO> listaRepartidores;
     private ObservableList<EnvioRepartidorDTO> listaEnvios;
     private RepartidorDTO repartidorSeleccionado;
+    private EnvioRepartidorDTO envioSeleccionado;
 
     @FXML
     void initialize() {
@@ -53,8 +55,8 @@ public class GestionRepartidorController {
         cargarRepartidores();
         configurarTablaEnvios();
         configurarSeleccionTabla();
+        configurarSeleccionTablaEnvios();
         cmbEstado.setItems(FXCollections.observableArrayList(EstadoRepartidor.values()));
-
     }
 
     private void configurarTablaRepartidores() {
@@ -94,6 +96,16 @@ public class GestionRepartidorController {
         });
     }
 
+    private void configurarSeleccionTablaEnvios() {
+        tblEnvios.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection,seleccion) -> {
+            if (seleccion!= null) {
+                envioSeleccionado=seleccion;
+            } else {
+                limpiarCampos(null);
+            }
+        });
+    }
+
     private void cargarDatosEnFormulario(RepartidorDTO repartidor) {
         txtIdRepartidor.setText(repartidor.getId());
         txtIdRepartidor.setDisable(true);
@@ -111,7 +123,6 @@ public class GestionRepartidorController {
             if (!validarCampos()) {
                 return;
             }
-
             RepartidorDTO nuevoRepartidor = new RepartidorDTO(
                     txtIdRepartidor.getText().trim(),
                     txtNombreRepartidor.getText().trim(),
@@ -127,10 +138,10 @@ public class GestionRepartidorController {
                 mostrarMensaje("Repartidor agregado exitosamente", false);
                 System.out.println("Repartidor agregado: " + nuevoRepartidor.getId());
             } else {
-                mostrarMensaje("Error: Ya existe un cliente con la cédula " + nuevoRepartidor.getId(), true);
+                mostrarMensaje("Error: Ya existe un Repartidor con la cédula " + nuevoRepartidor.getId(), true);
             }
         } catch (Exception e) {
-            mostrarMensaje("Error al agregar cliente: " + e.getMessage(), true);
+            mostrarMensaje("Error al agregar Repartidor: " + e.getMessage(), true);
         }
     }
 
@@ -138,7 +149,7 @@ public class GestionRepartidorController {
     void actualizarRepartidor(ActionEvent event) {
         try {
             if (repartidorSeleccionado == null) {
-                mostrarMensaje("Seleccione un cliente de la tabla para actualizar", true);
+                mostrarMensaje("Seleccione un Repartidor de la tabla para actualizar", true);
                 return;
             }
 
@@ -152,15 +163,15 @@ public class GestionRepartidorController {
 
             if (adminFacade.actualizarRepartidor(repartidorSeleccionado)) {
                 tblRepartidores.refresh();
-                mostrarMensaje("Cliente actualizado exitosamente", false);
-                System.out.println("Cliente actualizado: " + repartidorSeleccionado.getId());
+                mostrarMensaje("Repartidor actualizado exitosamente", false);
+                System.out.println("Repartidor actualizado: " + repartidorSeleccionado.getId());
                 limpiarCampos(null);
             } else {
-                mostrarMensaje("Error: No se pudo actualizar el cliente", true);
+                mostrarMensaje("Error: No se pudo actualizar el Repartidor", true);
             }
 
         } catch (Exception e) {
-            mostrarMensaje("Error al actualizar cliente: " + e.getMessage(), true);
+            mostrarMensaje("Error al actualizar repartidor: " + e.getMessage(), true);
         }
     }
 
@@ -191,7 +202,7 @@ public class GestionRepartidorController {
             }
 
         } catch (Exception e) {
-            mostrarMensaje("Error al eliminar cliente: " + e.getMessage(), true);
+            mostrarMensaje("Error al eliminar repartidor: " + e.getMessage(), true);
         }
 
     }
@@ -199,31 +210,35 @@ public class GestionRepartidorController {
     @FXML
     void eliminarEnvio(ActionEvent event) {
         try {
-            if (repartidorSeleccionado == null) {
-                mostrarMensaje("Seleccione un Repartidor de la tabla para eliminar", true);
+            if (envioSeleccionado == null) {
+                mostrarMensaje("Seleccione un Envio de la tabla para eliminar", true);
                 return;
             }
 
             Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
             confirmacion.setTitle("Confirmar Eliminación");
-            confirmacion.setHeaderText("¿Está seguro de eliminar este Repartidor?");
-            confirmacion.setContentText("Repartidor: " + repartidorSeleccionado.getNombre() +
-                    "\nCédula: " + repartidorSeleccionado.getId());
+            confirmacion.setHeaderText("¿Está seguro de eliminar este Envio?");
+            confirmacion.setContentText("Envio: " + envioSeleccionado.getIdEnvio() +
+                    "\nDestino: " + envioSeleccionado.getDestino());
 
             Optional<ButtonType> resultado = confirmacion.showAndWait();
 
             if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-                if (adminFacade.eliminarRepartidor(repartidorSeleccionado.getId())) {
+                boolean eliminado=adminFacade.eliminarEnvioRepartidor(repartidorSeleccionado.getId(),envioSeleccionado.getIdEnvio());
+                if (eliminado) {
+                    tblEnvios.getSelectionModel().clearSelection();
+                    tblEnvios.getItems().remove(envioSeleccionado);
+                    envioSeleccionado=null;
+                    configurarTablaEnvios();
                     cargarRepartidores();
-                    limpiarCampos(null);
-                    mostrarMensaje("Repartidor eliminado exitosamente", false);
+                    mostrarMensaje("Envio eliminado del repartidor exitosamente", false);
                 } else {
-                    mostrarMensaje("Error: No se pudo eliminar el Repartidor", true);
+                    mostrarMensaje("Error: No se pudo eliminar el Envio de la lista del Repartidor", true);
                 }
             }
 
         } catch (Exception e) {
-            mostrarMensaje("Error al eliminar cliente: " + e.getMessage(), true);
+            mostrarMensaje("Error al eliminar envio del repartidor: " + e.getMessage(), true);
         }
 
     }

@@ -4,6 +4,7 @@ import models.DTO.EnvioRepartidorDTO;
 import models.DTO.RepartidorDTO;
 import models.Repartidor;
 import models.Usuario;
+import service.EnvioService;
 import service.RepartidorService;
 import service.UsuarioService;
 
@@ -43,5 +44,9 @@ public class AdminFacade {
 
     public Repartidor buscarRepartidorEntity(String id){
         return repartidorService.buscarRepartidorEntity(id);
+    }
+
+    public boolean eliminarEnvioRepartidor(String idRepartidor, String idEnvio) {
+        return repartidorService.eliminarEnvioRepartidor(idRepartidor, idEnvio);
     }
 }

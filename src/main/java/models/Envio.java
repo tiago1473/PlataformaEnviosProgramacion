@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Envio {
-    public static float contador = 1;
+    public static int contador = 1;
     private String id;
     private Direccion origen;
     private Direccion destino;

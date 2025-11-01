@@ -1,13 +1,14 @@
 package service;
 
+import models.*;
 import models.DTO.EnvioDTO;
-import models.Direccion;
-import models.Envio;
-import models.EnvioBuilder;
 
 public class EnvioService {
 
+    private final PlataformaEnvios plataformaEnvios;
+
     public EnvioService(){
+        this.plataformaEnvios = PlataformaEnvios.getInstancia();
     }
 
     public Envio crearEnvio(EnvioDTO envioDTO) {
@@ -66,5 +67,18 @@ public class EnvioService {
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return radioTierra * c;
     }
+
+    public Envio buscarEnvioEntity(String idEnvio) {
+        for (Envio envio : plataformaEnvios.getEnvios()) {
+            if (envio.getId().equals(idEnvio)) {
+                return envio;
+            }
+        }
+        return null;
+    }
+
+
+
+
 
 }
