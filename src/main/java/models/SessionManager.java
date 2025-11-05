@@ -32,13 +32,4 @@ public class SessionManager {
     public UsuarioDTO getUsuarioLogueado() {
         return usuarioLogueado;
     }
-
-    public String getUsuarioId() {
-        return usuarioLogueado != null ? usuarioLogueado.getId() : null;
-    }
-
-    public boolean hayUsuarioLogueado() {
-        return usuarioLogueado != null;
-    }
-
 }

@@ -1,39 +1,20 @@
 package models;
 import java.util.ArrayList;
 
-public class Usuario {
-    private String id;
-    private String password;
+public class Usuario extends UsuarioBase {
     private String nombre;
     private String correo;
     private String telefono;
     private ArrayList<Envio> envios;
     private ArrayList<Direccion> direccion;
 
-    public Usuario(String id, String password, String nombre, String correo, String telefono) {
-        this.id = id;
-        this.password = password;
+    public Usuario(String id, String password, Rol rol, String nombre, String correo, String telefono) {
+        super(id, password, rol);
         this.nombre = nombre;
         this.correo = correo;
         this.telefono = telefono;
         this.envios = new ArrayList<>();
         this.direccion = new ArrayList<>();
-    }
-
-    public String getId() {
-        return this.id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getNombre() {
@@ -87,8 +68,7 @@ public class Usuario {
     @Override
     public String toString() {
         return "Usuario: "+
-                "\nId: " + this.id+
-                "\nPassword: " + this.password +
+                "\nId: " + getId()+
                 "\nNombre: " + this.nombre +
                 "\nCorreo: " + this.correo +
                 "\nTelefono: " + this.telefono;

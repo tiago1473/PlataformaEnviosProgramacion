@@ -13,10 +13,11 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import models.DTO.UsuarioDTO;
+import models.Rol;
 import models.SessionManager;
 import service.facade.LoginFacade;
 import utils.PathsFxml;
-
+import javafx.scene.input.MouseEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -31,12 +32,9 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loginFacade = new LoginFacade();
-        if (inputUsername != null) {
-            inputUsername.clear();
-        }
-        if (inputPassword != null) {
-            inputPassword.clear();
-        }
+        inputUsername.clear();
+        inputPassword.clear();
+
     }
 
     @FXML
@@ -55,15 +53,14 @@ public class LoginController implements Initializable {
                 return;
             }
 
-            UsuarioDTO usuario = loginFacade.validarCredenciales(id, password);
+            UsuarioDTO usuario = loginFacade.validarCredenciales(id,password);
 
-            if (usuario != null) {
+            if (usuario.getRol()== Rol.USER) {
                 System.out.println("Login exitoso. Usuario: " + usuario.getNombre()+ ": " + usuario.getId());
-                // Guardo el Usuario en Sesión
                 SessionManager.getInstancia().iniciarSesion(usuario);
-                navegarAPantalla(event, PathsFxml.PATH_PANTALLA_PRINCIPAL_USUARIO); //La del Usuario
-            }else if(loginFacade.esAdministrador(id, password)){
-                navegarAPantalla(event, PathsFxml.PATH_GESTION_REPARTIDOR); //La del Admin
+                navegarAPantalla(event, PathsFxml.PATH_PANTALLA_PRINCIPAL_USUARIO);
+            }else if(usuario.getRol()==Rol.ADM){
+                navegarAPantalla(event, PathsFxml.PATH_GESTION_REPARTIDOR); //CAMBIAR CUANDO TENGA LA PANTALLA
             }else {
                     mostrarError("Credenciales inválidas. Verifique su ID y contraseña.");
                     inputPassword.clear();
@@ -71,7 +68,6 @@ public class LoginController implements Initializable {
             }
         } catch (Exception e) {
             System.err.println("Error en login: " + e.getMessage());
-            e.printStackTrace();
             mostrarError("Error al iniciar sesión. Intente nuevamente.");
         }
     }
@@ -111,6 +107,19 @@ public class LoginController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
-        System.out.println("Error de login: " + mensaje);
+    }
+
+    public void registrarUsuario(MouseEvent mouseEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(PathsFxml.PATH_REGISTER));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) mouseEvent.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            mostrarError("Error al ingresar a Registrar Usuario: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

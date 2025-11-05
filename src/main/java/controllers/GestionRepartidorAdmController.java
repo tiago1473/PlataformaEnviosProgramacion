@@ -11,12 +11,11 @@ import models.DTO.EnvioRepartidorDTO;
 import models.DTO.RepartidorDTO;
 import models.EstadoRepartidor;
 import service.facade.AdminFacade;
-import utils.mappers.EnvioRepartidorMapper;
 import utils.mappers.RepartidorMapper;
 
 import java.util.Optional;
 
-public class GestionRepartidorController {
+public class GestionRepartidorAdmController {
     @FXML    private TextField txtIdRepartidor;
     @FXML    private TextField txtNombreRepartidor;
     @FXML    private TextField txtTelefonoRepartidor;

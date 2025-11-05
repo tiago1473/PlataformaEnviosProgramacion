@@ -11,14 +11,7 @@ public class LoginFacade {
     }
 
     public UsuarioDTO validarCredenciales(String id, String password) {
-        return loginService.validarCredenciales(id, password);
+        return loginService.validarCredenciales(id,password);
     }
 
-    public boolean existeUsuario(String id) {
-        return loginService.existeUsuario(id);
-    }
-
-    public boolean esAdministrador(String id, String paswword) {
-        return loginService.esAdministrador(id, paswword);
-    }
 }

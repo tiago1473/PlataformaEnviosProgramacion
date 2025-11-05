@@ -1,25 +1,31 @@
 package utils.mappers;
 
 import models.DTO.UsuarioDTO;
-import models.Direccion;
-import models.Envio;
+import models.Rol;
 import models.Usuario;
-
-import java.util.ArrayList;
+import models.UsuarioBase;
 
 public class UsuarioMapper {
 
-    public static UsuarioDTO toUsuarioDTO(Usuario usuario) {
-        if (usuario == null) {return null;}
+    public static UsuarioDTO tousuarioBaseDTO(UsuarioBase usuario) {
+        if (usuario == null) {
+            return null;
+        }
+        return new UsuarioDTO(
+                usuario.getId(),
+                usuario.getPassword());
+    }
 
+    public static UsuarioDTO toUsuarioDTO(Usuario usuario) {
+        if (usuario == null) {
+            return null;
+        }
         return new UsuarioDTO(
                 usuario.getPassword(),
                 usuario.getId(),
                 usuario.getNombre(),
                 usuario.getCorreo(),
-                usuario.getTelefono(),
-                usuario.getEnvios(),
-                usuario.getDireccion());
+                usuario.getTelefono());
     }
 
     public static Usuario toUsuario(UsuarioDTO usuarioDTO) {
@@ -28,6 +34,7 @@ public class UsuarioMapper {
         return new Usuario(
                 usuarioDTO.getId(),
                 usuarioDTO.getPassword(),
+                Rol.USER,
                 usuarioDTO.getNombre(),
                 usuarioDTO.getCorreo(),
                 usuarioDTO.getTelefono());

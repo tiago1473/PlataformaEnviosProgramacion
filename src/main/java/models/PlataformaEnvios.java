@@ -3,9 +3,9 @@ package models;
 import java.util.ArrayList;
 
 public class PlataformaEnvios {
-    ArrayList<Repartidor> repartidores;
-    ArrayList<Usuario> usuarios;
-    ArrayList<Envio> envios;
+    private ArrayList<Repartidor> repartidores;
+    private ArrayList<UsuarioBase> usuarios;
+    private ArrayList<Envio> envios;
     private static PlataformaEnvios instancia;
 
     private PlataformaEnvios() {
@@ -25,7 +25,7 @@ public class PlataformaEnvios {
         repartidores.add(repartidor);
     }
 
-    public void addUsuario(Usuario usuario) {
+    public void addUsuario(UsuarioBase usuario) {
         usuarios.add(usuario);
     }
 
@@ -39,11 +39,11 @@ public class PlataformaEnvios {
         this.repartidores = repartidores;
     }
 
-    public ArrayList<Usuario> getUsuarios() {
+    public ArrayList<UsuarioBase> getUsuarios() {
         return this.usuarios;
     }
 
-    public void setUsuarios(ArrayList<Usuario> usuarios) {
+    public void setUsuarios(ArrayList<UsuarioBase> usuarios) {
         this.usuarios = usuarios;
     }
 

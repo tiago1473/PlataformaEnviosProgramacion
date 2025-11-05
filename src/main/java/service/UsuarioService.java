@@ -17,25 +17,31 @@ public class UsuarioService {
 
     public ArrayList<UsuarioDTO> obtenerTodosLosUsuario (){
         ArrayList<UsuarioDTO> listaUsuariosDTO = new ArrayList<>();
-        for(Usuario usuario : this.plataformaEnvios.getUsuarios()){
-            listaUsuariosDTO.add(UsuarioMapper.toUsuarioDTO(usuario));
+        for(UsuarioBase usuario : this.plataformaEnvios.getUsuarios()){
+            if(usuario instanceof Usuario){
+                listaUsuariosDTO.add(UsuarioMapper.toUsuarioDTO((Usuario) usuario));
+            }
+
         }
         return listaUsuariosDTO;
     }
 
-    public UsuarioDTO buscarUsuarioId(String id){
-        for(Usuario usuario : this.plataformaEnvios.getUsuarios()){
-            if(usuario.getId().equals(id)){
-                return UsuarioMapper.toUsuarioDTO(usuario);
+    public UsuarioDTO buscarUsuarioId(String id) {
+        for (UsuarioBase usuario : this.plataformaEnvios.getUsuarios()) {
+            if (usuario instanceof Usuario && usuario.getId().equals(id)) {
+                return UsuarioMapper.toUsuarioDTO((Usuario) usuario);
+            } else if (usuario.getId().equals(id)) {
+                return UsuarioMapper.tousuarioBaseDTO(usuario);
             }
+            System.out.println("No se encontró usuario con ID: " + id);
         }
         return null;
     }
 
     public Usuario buscarUsuarioEntidad(String id){
-        for(Usuario usuario : this.plataformaEnvios.getUsuarios()){
+        for(UsuarioBase usuario : this.plataformaEnvios.getUsuarios()){
             if(usuario.getId().equals(id)){
-                return usuario;
+                return (Usuario) usuario;
             }
         }
         return null;
