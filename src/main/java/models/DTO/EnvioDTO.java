@@ -3,9 +3,14 @@ package models.DTO;
 import models.Direccion;
 import models.EstadoEnvio;
 
+import java.time.LocalDateTime;
+
 public class EnvioDTO {
+    private String id;
     private Direccion origen;
     private Direccion destino;
+    private LocalDateTime fechaCreacion;
+    private LocalDateTime fechaEntrega;
     private double peso;
     private double largo;
     private double ancho;
@@ -16,6 +21,7 @@ public class EnvioDTO {
     private boolean fragil;
     private boolean firma;
     private boolean prioridad;
+    private String estadoPago;
 
     public EnvioDTO (){}
 
@@ -30,6 +36,46 @@ public class EnvioDTO {
         this.estado = estado;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public double getCosto() {
+        return costo;
+    }
+
+    public String getEstadoPago() {
+        return estadoPago;
+    }
+
+    public void setEstadoPago(String estadoPago) {
+        this.estadoPago = estadoPago;
+    }
+
+    public void setCosto(double costo) {
+        this.costo = costo;
+    }
+
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public LocalDateTime getFechaEntrega() {
+        return fechaEntrega;
+    }
+
+    public void setFechaEntrega(LocalDateTime fechaEntrega) {
+        this.fechaEntrega = fechaEntrega;
+    }
+
     public Direccion getOrigen() {
         return this.origen;
     }
@@ -37,8 +83,6 @@ public class EnvioDTO {
     public void setOrigen(Direccion origen) {
         this.origen = origen;
     }
-
-
 
     public Direccion getDestino() {
         return this.destino;

@@ -1,6 +1,8 @@
 package utils.mappers;
 import models.DTO.DireccionDTO;
+import models.DTO.UsuarioDTO;
 import models.Direccion;
+import models.Usuario;
 
 public class DireccionMapper {
 
@@ -25,5 +27,13 @@ public class DireccionMapper {
         direccionDTO.setId(direccion.getIdDireccion());
         direccionDTO.setCoordenada(direccion.getCoordenada());
         return direccionDTO;
+    }
+
+    public static void actualizarDireccion(DireccionDTO direccionDTO, Direccion direccion){
+        if(direccionDTO ==null || direccion==null){return;}
+        direccion.setIdDireccion(direccionDTO.getId());
+        direccion.setAlias(direccionDTO.getAlias());
+        direccion.setCalle(direccionDTO.getCalle());
+        direccion.setCiudad(direccionDTO.getCiudad());
     }
 }

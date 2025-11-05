@@ -1,11 +1,10 @@
 package service;
-
+import models.*;
 import models.DTO.DireccionDTO;
+import models.DTO.EnvioDTO;
 import models.DTO.UsuarioDTO;
-import models.Direccion;
-import models.PlataformaEnvios;
-import models.Usuario;
 import utils.mappers.DireccionMapper;
+import utils.mappers.EnvioMapper;
 import utils.mappers.UsuarioMapper;
 import java.util.ArrayList;
 
@@ -29,14 +28,6 @@ public class UsuarioService {
             if(usuario.getId().equals(id)){
                 return UsuarioMapper.toUsuarioDTO(usuario);
             }
-        }
-        return null;
-    }
-
-    public UsuarioDTO validarAccesoUsuario(String id, String password){
-        UsuarioDTO usuarioHallado =  buscarUsuarioId(id);
-        if(usuarioHallado != null &&  usuarioHallado.getPassword().equals(password)){
-            return usuarioHallado;
         }
         return null;
     }
@@ -95,5 +86,68 @@ public class UsuarioService {
             return direccionesUsuario;
         }
         return direccionesUsuario; //Retornaría una lista vacía
+    }
+
+    public Direccion buscarDireccionUsuario(Usuario usuario, DireccionDTO direccionDTO){
+        for(Direccion direccion : usuario.getDireccion()){
+            if(direccion.getIdDireccion().equals(direccionDTO.getId())){
+                return direccion;
+            }
+        }
+        return null;
+    }
+
+    public boolean actualizarDireccionUsuario(UsuarioDTO usuarioDTO, DireccionDTO direccionDTO){
+        Usuario usuarioHallado = buscarUsuarioEntidad(usuarioDTO.getId());
+        Direccion direccion = buscarDireccionUsuario(usuarioHallado, direccionDTO);
+        if(usuarioHallado != null && direccion != null){
+            DireccionMapper.actualizarDireccion(direccionDTO, direccion);
+            return true;
+        }
+        return false;
+    }
+
+    public ArrayList<EnvioDTO> obtenerEnviosUsuario (String id){
+        ArrayList<EnvioDTO> listaEnviosDTOUsuario = new ArrayList<>();
+        Usuario usuarioHallado = buscarUsuarioEntidad(id);
+        for(Envio envio : usuarioHallado.getEnvios()){
+            listaEnviosDTOUsuario.add(EnvioMapper.toDTOPantallaUsuario(envio));
+        }
+        return listaEnviosDTOUsuario;
+    }
+
+    public boolean actualizarEstadoEnvioUsuario(String usuarioId, String envioId, EstadoEnvio nuevoEstado){
+        Usuario usuarioHallado = buscarUsuarioEntidad(usuarioId);
+        if (usuarioHallado == null || usuarioHallado.getEnvios() == null) {
+            return false;
+        }
+        for (Envio envio : usuarioHallado.getEnvios()){
+            if (envio != null && envio.getId().equals(envioId)){
+                envio.setEstado(nuevoEstado);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public EnvioDTO buscarEnvioUsuario (String idUsuario, String idEnvio){
+        Usuario usuarioHallado = buscarUsuarioEntidad(idUsuario);
+        for(Envio envio : usuarioHallado.getEnvios()){
+            if(envio.getId().equals(idEnvio)){
+                EnvioDTO envioHallado = EnvioMapper.toDTOPantallaUsuario(envio);
+                return envioHallado;
+            }
+        }
+        return null;
+    }
+
+    public boolean eliminarDireccionUsuario(String idUsuario, DireccionDTO direccionDTO){
+        Usuario usuarioHallado = buscarUsuarioEntidad(idUsuario);
+        Direccion direccion = buscarDireccionUsuario(usuarioHallado, direccionDTO);
+        if(usuarioHallado != null && direccion != null){
+            usuarioHallado.getDireccion().remove(direccion);
+            return true;
+        }
+        return false;
     }
 }

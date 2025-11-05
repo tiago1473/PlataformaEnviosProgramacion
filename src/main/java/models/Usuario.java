@@ -76,6 +76,14 @@ public class Usuario {
         this.direccion = direccion;
     }
 
+    public void addDireccion(Direccion direccion){
+        this.direccion.add(direccion);
+    }
+
+    public void addEnvio(Envio envio){
+        this.envios.add(envio);
+    }
+
     @Override
     public String toString() {
         return "Usuario: "+

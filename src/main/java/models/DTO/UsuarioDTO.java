@@ -80,4 +80,5 @@ public class UsuarioDTO {
     public void setDireccion(ArrayList<Direccion> direccion) {
         this.direccion = direccion;
     }
+
 }

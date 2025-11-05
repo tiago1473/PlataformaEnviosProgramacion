@@ -21,6 +21,7 @@
         <Text layoutX="251.0" layoutY="215.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Contraseña" />
         <PasswordField fx:id="inputPassword" layoutX="252.0" layoutY="226.0" />
 
-        <Button fx:id="btnLogin" layoutX="251.0" layoutY="265.0" mnemonicParsing="false" onAction="#login" prefHeight="26.0" prefWidth="142.0" text="Ingresar" />
+        <Button fx:id="btnLogin" layoutX="255.0" layoutY="264.0" mnemonicParsing="false" onAction="#login" prefHeight="26.0" prefWidth="142.0" text="Ingresar" />
+      <Label fx:id="lblMensajeError" layoutX="24.0" layoutY="435.0" text="Label" />
     </children>
 </AnchorPane>

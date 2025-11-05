@@ -2,6 +2,8 @@ package utils;
 
 import models.*;
 
+import java.util.ArrayList;
+
 public class AppSetup {
     private PlataformaEnvios plataformaEnvios;
 
@@ -72,6 +74,29 @@ public class AppSetup {
         repartidor1.addEnvios(envio5);
         repartidor3.addEnvios(envio1);
 
-    }
+        //Gestion Usuario y Envios
+        Direccion direccion8 = new Direccion("Casa", "Carrera 35 # 19 - 79", "Calarcá");
+        Direccion direccion9 = new Direccion("Empresa", "Carrera 15 #8-22", "Pereira");
+        Direccion direccion10 = new Direccion("Hogar", "Carrera 41", "Manizales");
+        Direccion direccion11 = new Direccion("Empresa", "Carrera 15 #8-22", "Pereira");
 
+        Envio envio6 = new EnvioBuilder(direccion8, direccion9, 2.8, 30.0, 20.0, 15.0,
+                EstadoEnvio.SOLICITADO).withFirma()
+                .withSeguro()
+                .build();
+
+        Envio envio7 = new EnvioBuilder(direccion8, direccion9, 2.8, 30.0, 20.0, 15.0,
+                EstadoEnvio.ENRUTA).withSeguro()
+                .build();
+
+        Usuario usuario1 = new Usuario("1004870794", "123", "Samuel", "SamuelLara@gmail.com", "3103970243");
+        usuario1.addDireccion(direccion8);
+        usuario1.addDireccion(direccion9);
+        usuario1.addDireccion(direccion10);
+        usuario1.addDireccion(direccion11);
+        usuario1.addEnvio(envio6);
+        usuario1.addEnvio(envio7);
+
+        plataformaEnvios.addUsuario(usuario1);
     }
+}

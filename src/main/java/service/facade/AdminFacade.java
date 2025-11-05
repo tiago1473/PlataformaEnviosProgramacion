@@ -21,7 +21,6 @@ public class AdminFacade {
     }
 
     /*Repartidores*/
-
     public boolean agregarRepartidor(RepartidorDTO repartidorDTO) {
         return repartidorService.agregarRepartidor(repartidorDTO);
     }

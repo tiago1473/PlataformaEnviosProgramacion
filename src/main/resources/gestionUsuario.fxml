@@ -12,7 +12,6 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="650.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.GestionUsuarioController">
    <children>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#efefef" height="46.0" layoutX="12.0" layoutY="14.0" stroke="BLACK" strokeType="INSIDE" width="776.0" />
@@ -39,9 +38,9 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Documento Identificacion" />
+            <Label text="Documento Identificación" />
             <Label text="Nombre" GridPane.rowIndex="1" />
-            <Label text="Telefono" GridPane.rowIndex="2" />
+            <Label text="Teléfono" GridPane.rowIndex="2" />
             <Label text="Email" GridPane.rowIndex="3" />
             <TextField fx:id="txtIdUsuario" GridPane.columnIndex="1" />
             <TextField fx:id="txtNombreUsuario" promptText="Ingrese nombre" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -77,7 +76,7 @@
       <Button layoutX="483.0" layoutY="385.0" mnemonicParsing="false" onAction="#actualizarDireccion" prefHeight="26.0" prefWidth="90.0" text="Actualizar" />
       <Button layoutX="584.0" layoutY="385.0" mnemonicParsing="false" onAction="#EliminarDireccion" prefHeight="26.0" prefWidth="90.0" text="Eliminar" />
       <Button layoutX="380.0" layoutY="385.0" mnemonicParsing="false" onAction="#agregarDireccion" prefHeight="26.0" prefWidth="90.0" text="Agregar" />
-      <TableView layoutX="23.0" layoutY="422.0" prefHeight="169.0" prefWidth="754.0">
+      <TableView fx:id="tableDirecciones" layoutX="23.0" layoutY="422.0" prefHeight="169.0" prefWidth="754.0">
         <columns>
           <TableColumn fx:id="colId" prefWidth="102.39999389648438" text="Id" />
           <TableColumn fx:id="colAlias" prefWidth="147.199951171875" text="Alias" />
@@ -88,5 +87,6 @@
         </columns>
       </TableView>
       <Button layoutX="12.0" layoutY="611.0" mnemonicParsing="false" onAction="#regresarGestionUsuario" prefHeight="26.0" prefWidth="90.0" text="Regresar" />
+      <Label fx:id="lblMensaje" layoutX="133.0" layoutY="616.0" text="Label" />
    </children>
 </AnchorPane>

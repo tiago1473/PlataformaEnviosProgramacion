@@ -39,7 +39,4 @@ public class UsuarioMapper {
         usuario.setCorreo(usuarioDTO.getCorreo());
         usuario.setTelefono(usuarioDTO.getTelefono());
     }
-
-
-
 }

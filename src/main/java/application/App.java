@@ -17,7 +17,7 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         AppSetup app = new AppSetup();
-        AnchorPane loader = FXMLLoader.load(getClass().getResource(PathsFxml.PATH_GESTION_REPARTIDOR));
+        AnchorPane loader = FXMLLoader.load(getClass().getResource(PathsFxml.PATH_LOGIN));
         Scene scene = new Scene(loader);
         primaryStage.setScene(scene);
         primaryStage.show();
