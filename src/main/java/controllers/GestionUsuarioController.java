@@ -189,7 +189,7 @@ public class GestionUsuarioController implements Initializable {
             direccionSeleccionada.setAlias(txtAliasDireccion.getText().trim());
             direccionSeleccionada.setCalle(txtCalleDireccion.getText().trim());
             direccionSeleccionada.setCiudad(txtCiudadDireccion.getText().trim());
-            if (usuarioFacade.actualizarDireccionUsuario(usuarioLogueado, direccionSeleccionada)) {
+            if (usuarioFacade.actualizarDireccionUsuario(usuarioLogueado.getId(), direccionSeleccionada)) {
                 tableDirecciones.refresh(); //es como decir actualizar
                 cargarDirecciones();
                 mostrarMensaje("Dirección actualizada exitosamente", false);

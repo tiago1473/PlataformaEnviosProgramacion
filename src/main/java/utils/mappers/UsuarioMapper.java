@@ -1,6 +1,8 @@
 package utils.mappers;
 
+import models.DTO.RepartidorDTO;
 import models.DTO.UsuarioDTO;
+import models.Repartidor;
 import models.Rol;
 import models.Usuario;
 import models.UsuarioBase;
@@ -45,5 +47,13 @@ public class UsuarioMapper {
         usuario.setNombre(usuarioDTO.getNombre());
         usuario.setCorreo(usuarioDTO.getCorreo());
         usuario.setTelefono(usuarioDTO.getTelefono());
+    }
+
+    public static void updateDTOFromEntity(Usuario entity, UsuarioDTO dto) {
+        if (entity == null || dto == null) return;
+        dto.setId(entity.getId());
+        dto.setNombre(entity.getNombre());
+        dto.setTelefono(entity.getTelefono());
+        dto.setCorreo(entity.getCorreo());
     }
 }

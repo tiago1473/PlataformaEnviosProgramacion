@@ -6,27 +6,28 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import models.DTO.UsuarioDTO;
-import models.SessionManager;
 import service.facade.UsuarioFacade;
 import utils.PathsFxml;
+
+import java.util.Optional;
 
 
 public class RegistroUsuarioController {
 
     @FXML private TextField txtIdUsuario;
     @FXML private TextField txtNombre;
-    @FXML private TextField txtPassword;
-    @FXML private TextField txtPassword2;
+    @FXML private PasswordField txtPassword;
+    @FXML private PasswordField txtPassword2;
     @FXML private TextField txtCorreo;
     @FXML private TextField txtTelefono;
 
     @FXML private Label lblMensaje;
 
     private UsuarioFacade usuarioFacade;
+    private Stage stage;
 
     public void initialize() {
         usuarioFacade = new UsuarioFacade();
@@ -47,14 +48,22 @@ public class RegistroUsuarioController {
                     txtTelefono.getText().trim());
 
             if (usuarioFacade.agregarUsuario(nuevoUsuario)) {
-                mostrarMensaje("Usuario creado exitosamente" +nuevoUsuario.getNombre(), false);
+                Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+                alerta.setTitle("Registro exitoso");
+                alerta.setHeaderText(null);
+                alerta.setContentText("Usuario creado exitosamente: " + nuevoUsuario.getNombre());
+                alerta.showAndWait();
+
+                limpiarCampos();
+                regresarALogin(event);
+
             } else {
                 mostrarMensaje("Error: Ya existe un Usuario con la cédula " + nuevoUsuario.getId(), true);
             }
         } catch (Exception e) {
             mostrarMensaje("Error al crear el Usuario: " + e.getMessage(), true);
         }
-        limpiarCampos();
+
     }
 
     @FXML
@@ -67,8 +76,7 @@ public class RegistroUsuarioController {
             stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
-            mostrarMensaje("Error al volver a login: " + e.getMessage(), true);
-            e.printStackTrace();
+            mostrarMensaje("Error al cerrar sesión: " + e.getMessage(), true);
         }
     }
 
@@ -95,11 +103,11 @@ public class RegistroUsuarioController {
             mostrarMensaje("La contraseña es obligatoria", true);
             return false;
         }
-        if (txtPassword!=txtPassword2) {
+        if (!txtPassword.getText().equals(txtPassword2.getText())) {
             mostrarMensaje("La contraseña debe coincidir en los dos campos", true);
+            return false;
         }
-        String correo = txtCorreo.getText().trim();
-        if (!correo.contains("@") || !correo.contains(".")) {
+        if (!txtCorreo.getText().contains("@") || !txtCorreo.getText().contains(".")) {
             mostrarMensaje("El formato del correo no es válido", true);
             return false;
         }

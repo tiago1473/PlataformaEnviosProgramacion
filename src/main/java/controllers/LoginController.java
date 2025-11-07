@@ -40,34 +40,28 @@ public class LoginController implements Initializable {
     @FXML
     void login(ActionEvent event) {
         try {
-            String id = inputUsername.getText();
-            String password = inputPassword.getText();
+            String id = inputUsername.getText().trim();
+            String password = inputPassword.getText().trim();
 
-            if (id == null || id.trim().isEmpty()) {
-                mostrarError("Por favor ingrese su ID de usuario");
-                return;
-            }
-
-            if (password == null || password.trim().isEmpty()) {
-                mostrarError("Por favor ingrese su contraseña");
+            if (id.isEmpty() || password.isEmpty()) {
+                mostrarError("Por favor ingrese su usuario y contraseña");
                 return;
             }
 
             UsuarioDTO usuario = loginFacade.validarCredenciales(id,password);
 
             if (usuario.getRol()== Rol.USER) {
-                System.out.println("Login exitoso. Usuario: " + usuario.getNombre()+ ": " + usuario.getId());
                 SessionManager.getInstancia().iniciarSesion(usuario);
                 navegarAPantalla(event, PathsFxml.PATH_PANTALLA_PRINCIPAL_USUARIO);
             }else if(usuario.getRol()==Rol.ADM){
-                navegarAPantalla(event, PathsFxml.PATH_GESTION_REPARTIDOR); //CAMBIAR CUANDO TENGA LA PANTALLA
+                SessionManager.getInstancia().iniciarSesion(usuario);
+                navegarAPantalla(event, PathsFxml.PATH_PANTALLA_PRINCIPAL_ADMINISTRADOR); //CAMBIAR CUANDO TENGA LA PANTALLA
             }else {
                     mostrarError("Credenciales inválidas. Verifique su ID y contraseña.");
                     inputPassword.clear();
                     inputUsername.clear();
             }
         } catch (Exception e) {
-            System.err.println("Error en login: " + e.getMessage());
             mostrarError("Error al iniciar sesión. Intente nuevamente.");
         }
     }

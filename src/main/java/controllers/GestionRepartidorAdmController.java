@@ -6,11 +6,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import models.DTO.EnvioRepartidorDTO;
 import models.DTO.RepartidorDTO;
 import models.EstadoRepartidor;
 import service.facade.AdminFacade;
+import utils.PathsFxml;
 import utils.mappers.RepartidorMapper;
 
 import java.util.Optional;
@@ -23,7 +29,6 @@ public class GestionRepartidorAdmController {
     @FXML    private Label lblLatitud;
     @FXML    private Label lblLongitud;
     @FXML    private Label lblRadio;
-
 
     @FXML    private TableView<EnvioRepartidorDTO> tblEnvios;
     @FXML    private TableColumn<EnvioRepartidorDTO, String> colEnvio;
@@ -88,7 +93,7 @@ public class GestionRepartidorAdmController {
                 cargarDatosEnFormulario(seleccion);
                 configurarTablaEnvios();
                 listaEnvios.clear();
-                listaEnvios.addAll(adminFacade.obtenerTodosLosEnvioRepartidores(seleccion.getId()));
+                listaEnvios.addAll(adminFacade.obtenerTodosLosEnviosRepartidor(seleccion.getId()));
             } else {
                 limpiarCampos(null);
             }
@@ -135,7 +140,6 @@ public class GestionRepartidorAdmController {
                 cargarRepartidores();
                 limpiarCampos(null);
                 mostrarMensaje("Repartidor agregado exitosamente", false);
-                System.out.println("Repartidor agregado: " + nuevoRepartidor.getId());
             } else {
                 mostrarMensaje("Error: Ya existe un Repartidor con la cédula " + nuevoRepartidor.getId(), true);
             }
@@ -163,7 +167,6 @@ public class GestionRepartidorAdmController {
             if (adminFacade.actualizarRepartidor(repartidorSeleccionado)) {
                 tblRepartidores.refresh();
                 mostrarMensaje("Repartidor actualizado exitosamente", false);
-                System.out.println("Repartidor actualizado: " + repartidorSeleccionado.getId());
                 limpiarCampos(null);
             } else {
                 mostrarMensaje("Error: No se pudo actualizar el Repartidor", true);
@@ -203,7 +206,6 @@ public class GestionRepartidorAdmController {
         } catch (Exception e) {
             mostrarMensaje("Error al eliminar repartidor: " + e.getMessage(), true);
         }
-
     }
 
     @FXML
@@ -239,7 +241,6 @@ public class GestionRepartidorAdmController {
         } catch (Exception e) {
             mostrarMensaje("Error al eliminar envio del repartidor: " + e.getMessage(), true);
         }
-
     }
 
     @FXML
@@ -258,7 +259,17 @@ public class GestionRepartidorAdmController {
 
     @FXML
     void regresarVista(ActionEvent event) {
-
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(PathsFxml.PATH_PANTALLA_PRINCIPAL_ADMINISTRADOR));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            mostrarMensaje("Error al abrir Gestión de Repartidores: " + e.getMessage(), true);
+            e.printStackTrace();
+        }
     }
 
     private boolean validarCampos() {

@@ -11,6 +11,7 @@ import utils.mappers.DireccionMapper;
 import utils.mappers.EnvioMapper;
 import utils.mappers.UsuarioMapper;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UsuarioFacade {
 
@@ -48,7 +49,7 @@ public class UsuarioFacade {
         return usuarioService.agregarDireccionUsuario(id, direccionDTO);
     }
 
-    public ArrayList<DireccionDTO> obtenerDireccionesUsuario(String id) {
+    public List<DireccionDTO> obtenerDireccionesUsuario(String id) {
         return usuarioService.obtenerDireccionesUsuario(id);
     }
 
@@ -60,8 +61,8 @@ public class UsuarioFacade {
         return usuarioService.buscarDireccionUsuario(usuario, direccionDTO);
     }
 
-    public boolean actualizarDireccionUsuario(UsuarioDTO usuarioDTO, DireccionDTO direccionDTO){
-        return usuarioService.actualizarDireccionUsuario(usuarioDTO, direccionDTO);
+    public boolean actualizarDireccionUsuario(String idUsuario, DireccionDTO direccionDTO){
+        return usuarioService.actualizarDireccionUsuario(idUsuario, direccionDTO);
     }
 
     public ArrayList<EnvioDTO> obtenerEnviosUsuario (String id){

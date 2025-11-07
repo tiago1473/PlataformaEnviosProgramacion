@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="597.0" prefWidth="830.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.PantallaPrincipalAdministradorController">
+    <children>
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#efefef" height="90.0" layoutX="14.0" layoutY="20.0" stroke="BLACK" strokeType="INSIDE" width="446.0" />
+        <GridPane layoutX="24.0" layoutY="72.0" prefHeight="26.0" prefWidth="426.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="208.20001220703125" minWidth="10.0" prefWidth="126.39999389648438" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="349.0" minWidth="10.0" prefWidth="300.0000061035156" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <TextField fx:id="txtIdAdministrador" GridPane.columnIndex="1" />
+                <Label prefHeight="18.0" prefWidth="123.0" text="  Id Administrador" />
+            </children>
+        </GridPane>
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#efefef" height="90.0" layoutX="488.0" layoutY="20.0" stroke="BLACK" strokeType="INSIDE" width="327.0" />
+        <GridPane layoutX="500.0" layoutY="27.0" prefHeight="72.0" prefWidth="305.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <Button mnemonicParsing="false" onAction="#gestionarUsuarios" prefHeight="26.0" prefWidth="299.0" text="Gestionar Usuarios y Direcciones" />
+                <Button mnemonicParsing="false" onAction="#gestionarRepartidores" prefHeight="26.0" prefWidth="300.0" text="Gestionar Repartidores / Eliminar Envios Asignados" GridPane.rowIndex="1" />
+            </children>
+        </GridPane>
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#efefef" height="90.0" layoutX="14.0" layoutY="132.0" stroke="BLACK" strokeType="INSIDE" width="802.0" />
+        <GridPane layoutX="20.0" layoutY="145.0" prefHeight="66.0" prefWidth="530.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="222.8" minWidth="10.0" prefWidth="183.40003662109376" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="223.39996643066405" minWidth="10.0" prefWidth="192.60003662109375" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="504.2000122070312" minWidth="10.0" prefWidth="150.79996337890623" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <Label text="Fecha Creación de Envío desde:" />
+                <Label text="Fecha Creación de Envío hasta:" GridPane.rowIndex="1" />
+                <DatePicker fx:id="fechaCreacionDesde" GridPane.columnIndex="1" />
+                <DatePicker fx:id="fechaCreacionHasta" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <Label prefHeight="18.0" prefWidth="143.0" text="Filtrar por Estado:" GridPane.columnIndex="2" />
+                <ComboBox fx:id="estadoEnvio" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            </children>
+        </GridPane>
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#efefef" height="200.0" layoutX="14.0" layoutY="237.0" stroke="BLACK" strokeType="INSIDE" width="802.0" />
+        <TableView fx:id="tableEnviosPlataforma" layoutX="23.0" layoutY="251.0" prefHeight="170.0" prefWidth="786.0">
+            <columns>
+                <TableColumn fx:id="colIdEnvio" prefWidth="75.0" text="Id" />
+                <TableColumn fx:id="colFechaCreacionEnvio" prefWidth="105.60003662109375" text="Fecha Creación" />
+                <TableColumn fx:id="colFechaEntregaEnvio" prefWidth="104.79998779296875" text="Fecha Entrega" />
+                <TableColumn fx:id="colCostoEnvio" prefWidth="94.4000244140625" text="Costo" />
+                <TableColumn fx:id="colEstadoPagoEnvio" prefWidth="100.7999267578125" text="Estado Pago" />
+                <TableColumn fx:id="colEstadoEnvio" prefWidth="84.800048828125" text="Estado" />
+                <TableColumn fx:id="colNombreUsuario" prefWidth="107.20001220703125" text="Usuario" />
+                <TableColumn fx:id="colNombreRepartidor" prefWidth="114.40003967285156" text="Repartidor" />
+            </columns>
+        </TableView>
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#efefef" height="100.0" layoutX="15.0" layoutY="445.0" stroke="BLACK" strokeType="INSIDE" width="802.0" />
+        <GridPane layoutX="26.0" layoutY="445.0" prefHeight="90.0" prefWidth="786.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="165.8" minWidth="10.0" prefWidth="163.40003662109376" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="277.3999877929688" minWidth="0.0" prefWidth="260.6" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="212.80002441406253" minWidth="10.0" prefWidth="179.40003662109376" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="239.99995117187495" minWidth="0.0" prefWidth="180.99996337890627" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <Label text="Id Envío Seleccionado" />
+                <Label text="Registrar Incidencia" GridPane.columnIndex="1" />
+                <Label prefHeight="18.0" prefWidth="100.0" text="Cambiar Estado" GridPane.columnIndex="2" />
+                <TextField fx:id="txtIncidencia" prefHeight="26.0" prefWidth="138.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <ComboBox fx:id="cmbEstadoEnvio" prefHeight="26.0" prefWidth="174.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <TextField fx:id="txtIdEnvio" prefHeight="26.0" prefWidth="96.0" GridPane.rowIndex="1" />
+            <Label prefHeight="18.0" prefWidth="100.0" text="Asignar Repartidor" GridPane.columnIndex="3" />
+            <ComboBox fx:id="combRepartidor" prefHeight="26.0" prefWidth="175.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Button mnemonicParsing="false" onAction="#cambiarEstadoEnvio" prefHeight="26.0" prefWidth="175.0" text="Cambiar Estado Envio" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <Button mnemonicParsing="false" onAction="#asignarRepartidorEnvio" prefHeight="26.0" prefWidth="175.0" text="Asignar Repartidor" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            </children>
+        </GridPane>
+        <Button layoutX="580.0" layoutY="164.0" mnemonicParsing="false" onAction="#panelMetricas" prefHeight="26.0" prefWidth="228.0" text="Panel de Metricas" />
+        <Button layoutX="398.0" layoutY="556.0" mnemonicParsing="false" onAction="#limpiarCampos" prefHeight="26.0" prefWidth="86.0" text="Limpiar" />
+        <Label fx:id="lblMensaje" layoutX="26.0" layoutY="561.0" prefHeight="18.0" prefWidth="320.0" />
+        <Button layoutX="722.0" layoutY="557.0" mnemonicParsing="false" onAction="#cerrarSesion" text="Cerrar Sesión" />
+      <Label layoutX="123.0" layoutY="27.0" prefHeight="22.0" prefWidth="228.0" text="Administrador Plataforma de Envios">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="202.0" layoutY="38.0" prefHeight="22.0" prefWidth="69.0" text="Same-Day">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Label>
+    </children>
+</AnchorPane>

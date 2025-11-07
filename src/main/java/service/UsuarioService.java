@@ -2,11 +2,14 @@ package service;
 import models.*;
 import models.DTO.DireccionDTO;
 import models.DTO.EnvioDTO;
+import models.DTO.EnvioRepartidorDTO;
 import models.DTO.UsuarioDTO;
 import utils.mappers.DireccionMapper;
 import utils.mappers.EnvioMapper;
+import utils.mappers.EnvioRepartidorMapper;
 import utils.mappers.UsuarioMapper;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UsuarioService {
     private final PlataformaEnvios plataformaEnvios;
@@ -40,7 +43,7 @@ public class UsuarioService {
 
     public Usuario buscarUsuarioEntidad(String id){
         for(UsuarioBase usuario : this.plataformaEnvios.getUsuarios()){
-            if(usuario.getId().equals(id)){
+            if(usuario.getId().equals(id)|| usuario instanceof Usuario){
                 return (Usuario) usuario;
             }
         }
@@ -82,8 +85,8 @@ public class UsuarioService {
         return true;
     }
 
-    public ArrayList<DireccionDTO> obtenerDireccionesUsuario(String id){
-        ArrayList<DireccionDTO> direccionesUsuario = new ArrayList<>();
+    public List<DireccionDTO> obtenerDireccionesUsuario(String id){
+        List<DireccionDTO> direccionesUsuario = new ArrayList<>();
         Usuario usuarioHallado = buscarUsuarioEntidad(id);
         if(usuarioHallado != null){
             for(Direccion direccion : usuarioHallado.getDireccion()){
@@ -91,7 +94,7 @@ public class UsuarioService {
             }
             return direccionesUsuario;
         }
-        return direccionesUsuario; //Retornaría una lista vacía
+        return direccionesUsuario;
     }
 
     public Direccion buscarDireccionUsuario(Usuario usuario, DireccionDTO direccionDTO){
@@ -103,8 +106,8 @@ public class UsuarioService {
         return null;
     }
 
-    public boolean actualizarDireccionUsuario(UsuarioDTO usuarioDTO, DireccionDTO direccionDTO){
-        Usuario usuarioHallado = buscarUsuarioEntidad(usuarioDTO.getId());
+    public boolean actualizarDireccionUsuario(String idUsuario, DireccionDTO direccionDTO){
+        Usuario usuarioHallado = buscarUsuarioEntidad(idUsuario);
         Direccion direccion = buscarDireccionUsuario(usuarioHallado, direccionDTO);
         if(usuarioHallado != null && direccion != null){
             DireccionMapper.actualizarDireccion(direccionDTO, direccion);

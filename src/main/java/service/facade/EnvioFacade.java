@@ -7,6 +7,7 @@ import service.EnvioService;
 import service.UsuarioService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EnvioFacade {
 
@@ -35,7 +36,7 @@ public class EnvioFacade {
         return envioService.cotizarEnvio(envioDTO);
     }
 
-    public ArrayList<DireccionDTO> obtenerDireccionesUsuario(String usuarioId) {
+    public List<DireccionDTO> obtenerDireccionesUsuario(String usuarioId) {
         return usuarioService.obtenerDireccionesUsuario(usuarioId);
     }
 

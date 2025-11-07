@@ -1,4 +1,5 @@
 package controllers;
+import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -10,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import models.DTO.EnvioDTO;
 import models.DTO.UsuarioDTO;
 import models.EstadoEnvio;
@@ -80,6 +82,7 @@ public class PantallaPrincipalUsuario implements Initializable {
         usuario = usuarioFacade.buscarUsuarioEntidad(usuarioLogueado.getId());
         envios = FXCollections.observableArrayList();
         enviosFiltrados = FXCollections.observableArrayList();
+        mostrarMensajeBienvenida();
         cargarInformacionUsuario();
         txtIdUsuario.setDisable(true);
         txtNombreUsuario.setDisable(true);
@@ -233,6 +236,15 @@ public class PantallaPrincipalUsuario implements Initializable {
             lblMensaje.setText(mensaje);
         }
         System.out.println("Pantalla Principal Usuario: " + mensaje);
+    }
+
+    private void mostrarMensajeBienvenida() {
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle("Bienvenido");
+        alerta.setHeaderText(null);
+        alerta.setContentText("Usuario: " + usuarioLogueado.getNombre()+
+                " Cedula: "+usuarioLogueado.getId());
+        alerta.show();
     }
 
     @FXML
