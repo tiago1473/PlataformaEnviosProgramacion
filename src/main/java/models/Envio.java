@@ -22,6 +22,8 @@ public class Envio {
     private boolean fragil;
     private boolean firma;
     private boolean prioridad;
+    private String nombreUsuario;
+    private String nombreRepartidor;
 
     public Envio(EnvioBuilder builder) {
         this.id = "E - 0" + contador;
@@ -36,6 +38,8 @@ public class Envio {
         this.seguro = builder.seguro;
         this.fragil = builder.fragil;
         this.firma = builder.firma;
+        this.fechaCreacion = builder.fechaCreacion;
+        this.fechaEstimadaEntrega = builder.fechaEstimadaEntrega;
         this.prioridad = builder.prioridad;
         this.incidencias = new ArrayList<>();
     }
@@ -166,5 +170,24 @@ public class Envio {
 
     public void setPrioridad(boolean prioridad) {
         this.prioridad = prioridad;
+    }
+
+    public void addIncidencia(Incidencia incidencia) {
+        this.incidencias.add(incidencia);
+    }
+
+    public String getNombreUsuario() {
+        return this.nombreUsuario;
+    }
+
+    public void setNombreUsuario(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
+    }
+
+    public String getNombreRepartidor() {
+        return this.nombreRepartidor;
+    }
+    public void setNombreRepartidor(String nombreRepartidor) {
+        this.nombreRepartidor = nombreRepartidor;
     }
 }

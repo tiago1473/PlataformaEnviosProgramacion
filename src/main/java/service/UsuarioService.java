@@ -2,11 +2,9 @@ package service;
 import models.*;
 import models.DTO.DireccionDTO;
 import models.DTO.EnvioDTO;
-import models.DTO.EnvioRepartidorDTO;
 import models.DTO.UsuarioDTO;
 import utils.mappers.DireccionMapper;
 import utils.mappers.EnvioMapper;
-import utils.mappers.EnvioRepartidorMapper;
 import utils.mappers.UsuarioMapper;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +41,7 @@ public class UsuarioService {
 
     public Usuario buscarUsuarioEntidad(String id){
         for(UsuarioBase usuario : this.plataformaEnvios.getUsuarios()){
-            if(usuario.getId().equals(id)|| usuario instanceof Usuario){
+            if(usuario.getId().equals(id) && usuario instanceof Usuario){
                 return (Usuario) usuario;
             }
         }
@@ -62,6 +60,9 @@ public class UsuarioService {
         Usuario usuarioHallado = buscarUsuarioEntidad(id);
         if(usuarioHallado != null){
             this.plataformaEnvios.getUsuarios().remove(usuarioHallado);
+            for(Envio envio : usuarioHallado.getEnvios()){
+                this.plataformaEnvios.getEnvios().remove(envio);
+            }
             return true;
         }
         return false;
@@ -71,6 +72,9 @@ public class UsuarioService {
         Usuario usuarioHallado = buscarUsuarioEntidad(usuarioDTO.getId());
         if(usuarioHallado != null){
             UsuarioMapper.actualizarUsuario(usuarioDTO, usuarioHallado);
+            for (Envio envio : usuarioHallado.getEnvios()){
+                envio.setNombreUsuario(usuarioHallado.getNombre());
+            }
             return true;
         }
         return false;

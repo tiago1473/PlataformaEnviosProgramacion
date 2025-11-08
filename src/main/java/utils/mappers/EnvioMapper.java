@@ -5,21 +5,7 @@ import models.EstadoEnvio;
 
 public class EnvioMapper {
 
-    public static EnvioDTO toDTO(Envio envio){
-        if (envio == null){
-            return null;
-        }
-        return new EnvioDTO(
-                envio.getOrigen(),
-                envio.getDestino(),
-                envio.getPeso(),
-                envio.getLargo(),
-                envio.getAncho(),
-                envio.getAlto(),
-                envio.getEstado());
-    }
-
-    public static EnvioDTO toDTOPantallaUsuario(Envio envio){
+     public static EnvioDTO toDTOPantallaUsuario(Envio envio){
         if (envio == null){
             return null;
         }
@@ -46,4 +32,37 @@ public class EnvioMapper {
         }
         return envioDTO;
     }
+
+    public static EnvioDTO toDTOPantallaAdministrador(Envio envio){
+        if (envio == null){
+            return null;
+        }
+        EnvioDTO envioDTO = new EnvioDTO();
+        envioDTO.setId(envio.getId());
+        envioDTO.setFechaCreacion(envio.getFechaCreacion());
+        envioDTO.setDestino(envio.getDestino());
+        envioDTO.setCosto(envio.getCosto());
+        envioDTO.setEstado(envio.getEstado());
+        envioDTO.setNombreUsuario(envio.getNombreUsuario());
+        envioDTO.setNombreRepartidor(envio.getNombreRepartidor());
+        if (envio.getEstado() == EstadoEnvio.ASIGNADO){
+            envioDTO.setEstadoPago("PAGO");
+        }else{
+            envioDTO.setEstadoPago("SIN PAGAR");
+        }
+
+        return envioDTO;
+    }
+
+    public static EnvioDTO toDTOPantallaRepartidor(Envio envio){
+         if (envio == null){
+             return null;
+         }
+         EnvioDTO envioDTO = new EnvioDTO();
+         envioDTO.setId(envio.getId());
+         envioDTO.setOrigen(envio.getOrigen());
+         envioDTO.setDestino(envio.getDestino());
+        return envioDTO;
+    }
+
 }

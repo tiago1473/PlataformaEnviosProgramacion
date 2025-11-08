@@ -22,19 +22,10 @@ public class EnvioDTO {
     private boolean firma;
     private boolean prioridad;
     private String estadoPago;
+    private String nombreUsuario;
+    private String nombreRepartidor;
 
     public EnvioDTO (){}
-
-    public EnvioDTO(Direccion origen, Direccion destino, double peso, double largo,
-                    double ancho, double alto, EstadoEnvio estado) {
-        this.origen = origen;
-        this.destino = destino;
-        this.peso = peso;
-        this.largo = largo;
-        this.ancho = ancho;
-        this.alto = alto;
-        this.estado = estado;
-    }
 
     public String getId() {
         return id;
@@ -162,5 +153,20 @@ public class EnvioDTO {
 
     public void setPrioridad(boolean prioridad) {
         this.prioridad = prioridad;
+    }
+
+    public String getNombreUsuario() {
+        return this.nombreUsuario;
+    }
+
+    public void setNombreUsuario(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
+    }
+
+    public String getNombreRepartidor() {
+        return this.nombreRepartidor;
+    }
+    public void setNombreRepartidor(String nombreRepartidor) {
+        this.nombreRepartidor = nombreRepartidor;
     }
 }

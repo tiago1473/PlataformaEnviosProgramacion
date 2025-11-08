@@ -1,11 +1,10 @@
 package service.facade;
 
-import models.DTO.DireccionDTO;
-import models.DTO.EnvioRepartidorDTO;
-import models.DTO.RepartidorDTO;
-import models.DTO.UsuarioDTO;
+import models.DTO.*;
+import models.EstadoEnvio;
 import models.Repartidor;
 import models.Usuario;
+import service.EnvioService;
 import service.RepartidorService;
 import service.UsuarioService;
 
@@ -15,10 +14,12 @@ public class AdminFacade {
 
     private final UsuarioService usuarioService;
     private final RepartidorService repartidorService;
+    private final EnvioService envioService;
 
     public AdminFacade() {
         this.usuarioService = new UsuarioService();
         this.repartidorService = new RepartidorService();
+        this.envioService = new EnvioService();
     }
 
     /*Repartidores*/
@@ -30,7 +31,7 @@ public class AdminFacade {
         return repartidorService.obtenerTodosLosRepartidores();
     }
 
-    public List <EnvioRepartidorDTO> obtenerTodosLosEnviosRepartidor(String idRepartidor) {
+    public List <EnvioDTO> obtenerTodosLosEnviosRepartidor(String idRepartidor) {
         return repartidorService.obtenerTodosLosEnvioRepartidores(idRepartidor);
     }
 
@@ -86,5 +87,23 @@ public class AdminFacade {
 
     public boolean eliminarDireccion(String idUsuario, DireccionDTO direccionDTO) {
         return usuarioService.eliminarDireccionUsuario(idUsuario,direccionDTO);
+    }
+
+    /*PantallaPrincipaldeEnvios*/
+
+    public List<EnvioDTO> obtenerTodosLosEnvios() {
+        return envioService.obtenerTodosLosEnvios();
+    }
+
+    public boolean registrarIncidencia(String idEnvio,String incidencia) {
+        return envioService.registrarIncidencia(idEnvio,incidencia);
+    }
+
+    public boolean registrarCambioEstado(String idEnvio, EstadoEnvio estadoEnvio) {
+        return envioService.registrarCambioEstado(idEnvio,estadoEnvio);
+    }
+
+    public boolean registrarCambioRepartidor(String idEnvio, String idRepartidor) {
+        return repartidorService.registrarCambioRepartidor(idEnvio,idRepartidor);
     }
 }

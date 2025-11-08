@@ -12,7 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import models.DTO.EnvioRepartidorDTO;
+import models.DTO.EnvioDTO;
 import models.DTO.RepartidorDTO;
 import models.EstadoRepartidor;
 import service.facade.AdminFacade;
@@ -30,10 +30,10 @@ public class GestionRepartidorAdmController {
     @FXML    private Label lblLongitud;
     @FXML    private Label lblRadio;
 
-    @FXML    private TableView<EnvioRepartidorDTO> tblEnvios;
-    @FXML    private TableColumn<EnvioRepartidorDTO, String> colEnvio;
-    @FXML    private TableColumn<EnvioRepartidorDTO, String> colOrigen;
-    @FXML    private TableColumn<EnvioRepartidorDTO, String> colDestino;
+    @FXML    private TableView<EnvioDTO> tblEnvios;
+    @FXML    private TableColumn<EnvioDTO, String> colEnvio;
+    @FXML    private TableColumn<EnvioDTO, String> colOrigen;
+    @FXML    private TableColumn<EnvioDTO, String> colDestino;
 
     @FXML    private TableView<RepartidorDTO> tblRepartidores;
     @FXML    private TableColumn<RepartidorDTO, String> colIdentificacion;
@@ -46,9 +46,9 @@ public class GestionRepartidorAdmController {
 
     private AdminFacade adminFacade;
     private ObservableList<RepartidorDTO> listaRepartidores;
-    private ObservableList<EnvioRepartidorDTO> listaEnvios;
+    private ObservableList<EnvioDTO> listaEnvios;
     private RepartidorDTO repartidorSeleccionado;
-    private EnvioRepartidorDTO envioSeleccionado;
+    private EnvioDTO envioSeleccionado;
 
     @FXML
     void initialize() {
@@ -73,9 +73,9 @@ public class GestionRepartidorAdmController {
     }
 
     private void configurarTablaEnvios() {
-        colEnvio.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getIdEnvio()));
-        colOrigen.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getOrigen()));
-        colDestino.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDestino()));
+        colEnvio.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId()));
+        colOrigen.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getOrigen().getCiudad()));
+        colDestino.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDestino().getCiudad()));
         tblEnvios.setItems(listaEnvios);
     }
 
@@ -219,13 +219,13 @@ public class GestionRepartidorAdmController {
             Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
             confirmacion.setTitle("Confirmar Eliminación");
             confirmacion.setHeaderText("¿Está seguro de eliminar este Envio?");
-            confirmacion.setContentText("Envio: " + envioSeleccionado.getIdEnvio() +
+            confirmacion.setContentText("Envio: " + envioSeleccionado.getId() +
                     "\nDestino: " + envioSeleccionado.getDestino());
 
             Optional<ButtonType> resultado = confirmacion.showAndWait();
 
             if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-                boolean eliminado=adminFacade.eliminarEnvioRepartidor(repartidorSeleccionado.getId(),envioSeleccionado.getIdEnvio());
+                boolean eliminado=adminFacade.eliminarEnvioRepartidor(repartidorSeleccionado.getId(),envioSeleccionado.getId());
                 if (eliminado) {
                     tblEnvios.getSelectionModel().clearSelection();
                     tblEnvios.getItems().remove(envioSeleccionado);

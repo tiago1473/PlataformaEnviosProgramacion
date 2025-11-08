@@ -2,6 +2,8 @@ package utils;
 
 import models.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class AppSetup {
@@ -46,8 +48,8 @@ public class AppSetup {
         Repartidor repartidor5 = new Repartidor("1023456789", "David Gómez", "3141122334", EstadoRepartidor.ACTIVO);
 
         Envio envio1 = new EnvioBuilder(direccion1, direccion2, 2.5, 30.0, 20.0, 15.0,
-                EstadoEnvio.SOLICITADO
-        ).withFirma()
+                EstadoEnvio.SOLICITADO)
+                .withFirma()
                 .withSeguro()
                 .build();
 
@@ -61,7 +63,7 @@ public class AppSetup {
                 .withPrioridad()
                 .build();
 
-        Envio envio4 = new EnvioBuilder(direccion2, direccion7, 8.0, 60.0, 45.0, 40.0,
+        Envio envio4 = new EnvioBuilder(direccion5, direccion7, 8.0, 60.0, 45.0, 40.0,
                 EstadoEnvio.SOLICITADO)
                 .withSeguro()
                 .withFragil()
@@ -80,6 +82,21 @@ public class AppSetup {
         Envio envio7 = new EnvioBuilder(direccion8, direccion9, 2.8, 30.0, 20.0, 15.0,
                 EstadoEnvio.ENRUTA).withSeguro()
                 .build();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        envio1.setFechaCreacion(LocalDateTime.parse("13/01/2025 00:00", formatter));
+        envio1.setFechaEstimadaEntrega(LocalDateTime.parse("28/01/2025 00:00", formatter));
+        envio2.setFechaCreacion(LocalDateTime.parse("17/01/2025 00:00", formatter));
+        envio2.setFechaEstimadaEntrega(LocalDateTime.parse("02/02/2025 00:00", formatter));
+        envio3.setFechaCreacion(LocalDateTime.parse("21/02/2025 00:00", formatter));
+        envio3.setFechaEstimadaEntrega(LocalDateTime.parse("05/03/2025 00:00", formatter));
+        envio4.setFechaCreacion(LocalDateTime.parse("25/02/2025 00:00", formatter));
+        envio4.setFechaEstimadaEntrega(LocalDateTime.parse("09/03/2025 00:00", formatter));
+        envio5.setFechaCreacion(LocalDateTime.parse("28/03/2025 00:00", formatter));
+        envio5.setFechaEstimadaEntrega(LocalDateTime.parse("12/04/2025 00:00", formatter));
+        envio6.setFechaCreacion(LocalDateTime.parse("02/04/2025 00:00", formatter));
+        envio6.setFechaEstimadaEntrega(LocalDateTime.parse("17/04/2025 00:00", formatter));
+        envio7.setFechaCreacion(LocalDateTime.parse("06/04/2025 00:00", formatter));
+        envio7.setFechaEstimadaEntrega(LocalDateTime.parse("21/04/2025 00:00", formatter));
 
         plataformaEnvios.addUsuario(a1);
         plataformaEnvios.addUsuario(u1);
@@ -123,8 +140,27 @@ public class AppSetup {
         u1.addDireccion(direccion11);
         u1.addEnvio(envio6);
         u1.addEnvio(envio7);
+        envio6.setNombreUsuario(u1.getNombre());
+        envio7.setNombreUsuario(u1.getNombre());
 
+        u2.addDireccion(direccion1);
+        u2.addDireccion(direccion2);
+        u2.addDireccion(direccion3);
+        u2.addDireccion(direccion4);
+        u2.addEnvio(envio1);
+        u2.addEnvio(envio2);
+        u2.addEnvio(envio5);
+        envio1.setNombreUsuario(u2.getNombre());
+        envio2.setNombreUsuario(u2.getNombre());
+        envio5.setNombreUsuario(u2.getNombre());
 
+        u3.addDireccion(direccion5);
+        u3.addDireccion(direccion6);
+        u3.addDireccion(direccion7);
+        u3.addEnvio(envio3);
+        u3.addEnvio(envio4);
+        envio3.setNombreUsuario(u3.getNombre());
+        envio4.setNombreUsuario(u3.getNombre());
 
     }
 }

@@ -11,8 +11,8 @@ public class EnvioBuilder {
     double alto;
     double costo;
     EstadoEnvio estado;
-    LocalDateTime fechaCreacion = LocalDateTime.now();
-    LocalDateTime fechaEstimadaEntrega = fechaCreacion.plusDays(15);
+    LocalDateTime fechaCreacion;
+    LocalDateTime fechaEstimadaEntrega;
     boolean seguro;
     boolean fragil;
     boolean firma;
@@ -27,6 +27,8 @@ public class EnvioBuilder {
         this.ancho = ancho;
         this.alto = alto;
         this.estado = estado;
+        this.fechaCreacion = LocalDateTime.now();
+        this.fechaEstimadaEntrega= fechaCreacion.plusDays(15);
     }
 
     public EnvioBuilder withSeguro() {

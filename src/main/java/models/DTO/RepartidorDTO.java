@@ -83,4 +83,10 @@ public class RepartidorDTO {
    public void setEnviosAsignados(int enviosAsignados) {
         this.enviosAsignados = enviosAsignados;
    }
+
+    @Override
+    public String toString() {
+        return "Repartidor "+ nombre +
+                " C.C.='" + getId() + '\'';
+    }
 }

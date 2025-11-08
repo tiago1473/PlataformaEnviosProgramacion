@@ -12,8 +12,6 @@ import models.DTO.UsuarioDTO;
 import service.facade.UsuarioFacade;
 import utils.PathsFxml;
 
-import java.util.Optional;
-
 
 public class RegistroUsuarioController {
 

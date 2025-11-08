@@ -1,11 +1,11 @@
 package service;
 
-import models.DTO.EnvioRepartidorDTO;
+import models.DTO.EnvioDTO;
 import models.DTO.RepartidorDTO;
 import models.Envio;
 import models.PlataformaEnvios;
 import models.Repartidor;
-import utils.mappers.EnvioRepartidorMapper;
+import utils.mappers.EnvioMapper;
 import utils.mappers.RepartidorMapper;
 
 import java.util.ArrayList;
@@ -40,11 +40,11 @@ public class RepartidorService {
         return repartidoresDTO;
     }
 
-    public List<EnvioRepartidorDTO> obtenerTodosLosEnvioRepartidores(String idRepartidor) {
+    public List<EnvioDTO> obtenerTodosLosEnvioRepartidores(String idRepartidor) {
         Repartidor repartidor = buscarRepartidorEntity(idRepartidor);
-        List<EnvioRepartidorDTO> envioRepartidoresDTO = new ArrayList<>();
+        List<EnvioDTO> envioRepartidoresDTO = new ArrayList<>();
         for (Envio envio : repartidor.getEnvios()) {
-            envioRepartidoresDTO.add(EnvioRepartidorMapper.toDTO(envio));
+            envioRepartidoresDTO.add(EnvioMapper.toDTOPantallaRepartidor(envio));
         }
         return envioRepartidoresDTO;
     }
@@ -69,10 +69,6 @@ public class RepartidorService {
         return true;
     }
 
-    public boolean existeRepartidor(String id) {
-        return buscarRepartidorEntity(id) != null;
-    }
-
     public Repartidor buscarRepartidorEntity(String id) {
         for (Repartidor repartidor : plataformaEnvios.getRepartidores()) {
             if (repartidor.getId().equals(id)) {
@@ -80,11 +76,6 @@ public class RepartidorService {
             }
         }
         return null;
-    }
-
-    public RepartidorDTO buscarRepartidorPorCedula(String id) {
-        Repartidor repartidor = buscarRepartidorEntity(id);
-        return repartidor != null ? RepartidorMapper.toDTO(repartidor) : null;
     }
 
     public boolean eliminarEnvioRepartidor(String idRepartidor,String idEnvio) {
@@ -97,4 +88,15 @@ public class RepartidorService {
         return true;
 
     }
+
+    public boolean registrarCambioRepartidor(String idEnvio,String idRepartidor) {
+        Repartidor repartidor = buscarRepartidorEntity(idRepartidor);
+        Envio envio = envioService.buscarEnvioEntity(idEnvio);
+        if (repartidor == null|| envio==null) {
+            return false;
+        }
+        repartidor.addEnvios(envio);
+        return true;
+    }
+
 }

@@ -2,8 +2,13 @@ package service;
 
 import models.*;
 import models.DTO.EnvioDTO;
+import models.DTO.RepartidorDTO;
+import utils.mappers.EnvioMapper;
+import utils.mappers.RepartidorMapper;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EnvioService {
 
@@ -102,6 +107,7 @@ public class EnvioService {
         Envio envio = crearEnvio(envioDTO);
         envio.setFechaCreacion(LocalDateTime.now());
         usuario.getEnvios().add(envio);
+        envio.setNombreUsuario(usuario.getNombre());
         plataformaEnvios.addEnvio(envio);
         return true;
     }
@@ -145,5 +151,31 @@ public class EnvioService {
         }
         Envio envio = crearEnvio(envioDTO);
         return envio.getCosto();
+    }
+
+    public List<EnvioDTO> obtenerTodosLosEnvios() {
+        List<EnvioDTO> enviosDTO = new ArrayList<>();
+        for (Envio envio : plataformaEnvios.getEnvios()) {
+            enviosDTO.add(EnvioMapper.toDTOPantallaAdministrador(envio));
+        }
+        return enviosDTO;
+    }
+
+    public boolean registrarIncidencia(String idEnvio, String incidencia) {
+        Envio envio=buscarEnvioEntity(idEnvio);
+        if (envio == null) {
+            return false;
+        }
+        envio.addIncidencia(new Incidencia(incidencia));
+        return true;
+    }
+
+    public boolean registrarCambioEstado(String idEnvio, EstadoEnvio estadoEnvio) {
+        Envio envio=buscarEnvioEntity(idEnvio);
+        if (envio == null) {
+            return false;
+        }
+        envio.setEstado(estadoEnvio);
+        return true;
     }
 }
