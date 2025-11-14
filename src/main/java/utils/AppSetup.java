@@ -74,6 +74,7 @@ public class AppSetup {
                 .withFirma()
                 .withPrioridad()
                 .build();
+
         Envio envio6 = new EnvioBuilder(direccion8, direccion9, 2.8, 30.0, 20.0, 15.0,
                 EstadoEnvio.SOLICITADO).withFirma()
                 .withSeguro()
@@ -82,6 +83,7 @@ public class AppSetup {
         Envio envio7 = new EnvioBuilder(direccion8, direccion9, 2.8, 30.0, 20.0, 15.0,
                 EstadoEnvio.ENRUTA).withSeguro()
                 .build();
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         envio1.setFechaCreacion(LocalDateTime.parse("13/01/2025 00:00", formatter));
         envio1.setFechaEstimadaEntrega(LocalDateTime.parse("28/01/2025 00:00", formatter));

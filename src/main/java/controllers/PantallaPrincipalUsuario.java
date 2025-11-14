@@ -1,5 +1,4 @@
 package controllers;
-import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,19 +10,21 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import models.DTO.EnvioDTO;
 import models.DTO.UsuarioDTO;
 import models.EstadoEnvio;
+import models.Incidencia;
 import models.SessionManager;
 import models.Usuario;
 import service.facade.UsuarioFacade;
 import utils.PathsFxml;
 import java.net.URL;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -43,6 +44,8 @@ public class PantallaPrincipalUsuario implements Initializable {
     private TableColumn<EnvioDTO,String> colFechaCreacionEnvio; //Debo castear la fecha a String
     @FXML
     private TableColumn<EnvioDTO,String> colFechaEntregaEnvio;
+    @FXML
+    private TableColumn<EnvioDTO,String> colFechaEstimadaEntregaEnvio;
     @FXML
     private TableColumn<EnvioDTO,String> colEstadoEnvio;
     @FXML
@@ -73,6 +76,7 @@ public class PantallaPrincipalUsuario implements Initializable {
     private SessionManager sessionManager;
     private UsuarioDTO usuarioLogueado;
     private Usuario usuario;
+    private NumberFormat formatoPesos;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -82,10 +86,13 @@ public class PantallaPrincipalUsuario implements Initializable {
         usuario = usuarioFacade.buscarUsuarioEntidad(usuarioLogueado.getId());
         envios = FXCollections.observableArrayList();
         enviosFiltrados = FXCollections.observableArrayList();
+        formatoPesos = NumberFormat.getCurrencyInstance(new Locale("es", "CO"));
         mostrarMensajeBienvenida();
         cargarInformacionUsuario();
         txtIdUsuario.setDisable(true);
         txtNombreUsuario.setDisable(true);
+        txtIdEnvioParaPago.setDisable(true);
+        costoEnvioParaPago.setDisable(true);
         configurarTabla();
         cargarEnvios();
         configurarSeleccionTabla();
@@ -104,9 +111,14 @@ public class PantallaPrincipalUsuario implements Initializable {
         colDestinoEnvio.setCellValueFactory(cellData ->
                 new javafx.beans.property.SimpleStringProperty(String.valueOf(cellData.getValue().getDestino().getIdDireccion())));
         colCostoEnvio.setCellValueFactory(cellData ->
-                new javafx.beans.property.SimpleStringProperty(String.valueOf(cellData.getValue().getCosto())));
+                new javafx.beans.property.SimpleStringProperty(formatoPesos.format(cellData.getValue().getCosto())));
         colFechaCreacionEnvio.setCellValueFactory(cellData -> {
             LocalDateTime fecha = cellData.getValue().getFechaCreacion();
+            String texto = (fecha != null) ? fecha.format(formatter) : "Sin fecha";
+            return new javafx.beans.property.SimpleStringProperty(texto);
+        });
+        colFechaEstimadaEntregaEnvio.setCellValueFactory(cellData -> {
+            LocalDateTime fecha = cellData.getValue().getFechaEstimadaEntrega();
             String texto = (fecha != null) ? fecha.format(formatter) : "Sin fecha";
             return new javafx.beans.property.SimpleStringProperty(texto);
         });
@@ -136,7 +148,7 @@ public class PantallaPrincipalUsuario implements Initializable {
         }
         if (envioDTOSeleccionado.getEstado() == EstadoEnvio.SOLICITADO) { //Para que se habilite el pago
             txtIdEnvioParaPago.setText(envioDTOSeleccionado.getId());
-            costoEnvioParaPago.setText(String.valueOf(envioDTOSeleccionado.getCosto()));
+            costoEnvioParaPago.setText(formatoPesos.format(envioDTOSeleccionado.getCosto()));
         }
     }
 
@@ -313,6 +325,57 @@ public class PantallaPrincipalUsuario implements Initializable {
     }
 
     @FXML
+    void verIncidenciasEnvio(ActionEvent event) {
+        envioSeleccionado = tableEnviosUsuario.getSelectionModel().getSelectedItem();
+        if (envioSeleccionado == null) {
+            mostrarMensaje("Por favor, seleccione un envío de la tabla", true);
+            return;
+        }
+
+        EnvioDTO envioCompleto = usuarioFacade.buscarEnvioUsuario(usuario.getId(), envioSeleccionado.getId());
+        if (envioCompleto == null) {
+            mostrarMensajeIncidencias("No se pudo obtener la información del envío");
+            return;
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        if (envioCompleto.getIncidencias() != null && !envioCompleto.getIncidencias().isEmpty()) { //Que no sea null y que la lista no esté vacía
+            StringBuilder mensajeIncidencias = new StringBuilder();
+            mensajeIncidencias.append("Envío: ").append(envioCompleto.getId()).append("\n\n");
+            mensajeIncidencias.append("Incidencias registradas:\n\n");
+
+            for (Incidencia incidencia : envioCompleto.getIncidencias()) {
+                if (incidencia != null) { //Porque puede que alguna sea null
+                    String fecha = (incidencia.getFecha() != null) ? incidencia.getFecha().format(formatter)
+                            : "Fecha no disponible";
+                    String descripcion = (incidencia.getDescripcion() != null) ? incidencia.getDescripcion()
+                            : "Sin descripción";
+                    mensajeIncidencias.append("Fecha: ").append(fecha).append("\n");
+                    mensajeIncidencias.append("Descripción: ").append(descripcion).append("\n\n");
+                }
+            }
+            mostrarMensajeIncidencias(mensajeIncidencias.toString());
+        }else{
+            mostrarMensajeIncidencias("El envío " + envioCompleto.getId() + " aún no registra incidencias.");
+        }
+    }
+
+    private void mostrarMensajeIncidencias(String mensajeIncidencias) {
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle("Incidencias de Envío");
+        alerta.setHeaderText(null);
+
+        if (mensajeIncidencias == null) {
+            mensajeIncidencias = "No hay información de incidencias disponible.";
+        }
+
+        alerta.setContentText(mensajeIncidencias);
+        alerta.setResizable(true); //Permite que la ventana de la alerta se pueda redimensionar manualmente con el mouse
+        alerta.getDialogPane().setPrefWidth(500); //Ajusta el ancho preferido del panel interno del diálogo
+        alerta.showAndWait(); //Detiene la ejecución del programa hasta que el usuario la cierre
+    }
+
+    @FXML
     void pagar(ActionEvent event) {
         String idEnvio = txtIdEnvioParaPago.getText() != null ? txtIdEnvioParaPago.getText().trim() : "";
         String metodo = metodoDePago.getValue();
@@ -337,7 +400,7 @@ public class PantallaPrincipalUsuario implements Initializable {
         }
 
         //Cambio el Modelo
-        boolean validacion = usuarioFacade.actualizarEstadoEnvioUsuario(usuario.getId(), envio.getId(), EstadoEnvio.ASIGNADO);
+        boolean validacion = usuarioFacade.actualizarEstadoEnvioUsuario(usuario.getId(), envio.getId(), EstadoEnvio.POR_ASIGNAR);
         if (!validacion) {
             mostrarMensaje("No fue posible actualizar el estado del envío en el modelo", true);
             return;
@@ -345,7 +408,7 @@ public class PantallaPrincipalUsuario implements Initializable {
         // Refresco la Lista desde el modelo y refresco pago por el nuevo estado
         cargarEnvios();
         aplicarFiltros();
-        mostrarMensaje("Pago exitoso con " + metodo + ". Envío ahora ASIGNADO.", false);
+        mostrarMensaje("Pago exitoso con " + metodo + ". Envío ahora POR ASIGNAR.", false);
     }
 
     @FXML

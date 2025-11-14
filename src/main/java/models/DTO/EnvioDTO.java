@@ -1,15 +1,17 @@
 package models.DTO;
-
 import models.Direccion;
 import models.EstadoEnvio;
+import models.Incidencia;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class EnvioDTO {
     private String id;
     private Direccion origen;
     private Direccion destino;
     private LocalDateTime fechaCreacion;
+    private LocalDateTime fechaEstimadaEntrega;
     private LocalDateTime fechaEntrega;
     private double peso;
     private double largo;
@@ -24,8 +26,17 @@ public class EnvioDTO {
     private String estadoPago;
     private String nombreUsuario;
     private String nombreRepartidor;
+    private ArrayList<Incidencia> incidencias;
 
     public EnvioDTO (){}
+
+    public LocalDateTime getFechaEstimadaEntrega() {
+        return fechaEstimadaEntrega;
+    }
+
+    public void setFechaEstimadaEntrega(LocalDateTime fechaEstimadaEntrega) {
+        this.fechaEstimadaEntrega = fechaEstimadaEntrega;
+    }
 
     public String getId() {
         return id;
@@ -41,6 +52,14 @@ public class EnvioDTO {
 
     public String getEstadoPago() {
         return estadoPago;
+    }
+
+    public ArrayList<Incidencia> getIncidencias() {
+        return incidencias;
+    }
+
+    public void setIncidencias(ArrayList<Incidencia> incidencias) {
+        this.incidencias = incidencias;
     }
 
     public void setEstadoPago(String estadoPago) {

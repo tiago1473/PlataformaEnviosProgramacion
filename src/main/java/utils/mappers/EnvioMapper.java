@@ -3,6 +3,8 @@ import models.DTO.EnvioDTO;
 import models.Envio;
 import models.EstadoEnvio;
 
+import java.util.ArrayList;
+
 public class EnvioMapper {
 
      public static EnvioDTO toDTOPantallaUsuario(Envio envio){
@@ -24,8 +26,17 @@ public class EnvioMapper {
         envioDTO.setSeguro(envio.isSeguro());
         envioDTO.setFragil(envio.isFragil());
         envioDTO.setFirma(envio.isFirma());
+        envioDTO.setFechaEstimadaEntrega(envio.getFechaEstimadaEntrega());
         envioDTO.setPrioridad(envio.isPrioridad());
-        if (envio.getEstado() == EstadoEnvio.ASIGNADO){
+
+         if (envio.getIncidencias() != null) {
+             envioDTO.setIncidencias(new ArrayList<>(envio.getIncidencias()));
+         } else {
+             envioDTO.setIncidencias(new ArrayList<>());
+         }
+
+        if (envio.getEstado() == EstadoEnvio.POR_ASIGNAR ||  envio.getEstado() == EstadoEnvio.ENRUTA ||
+        envio.getEstado() == EstadoEnvio.ENTREGADO){
             envioDTO.setEstadoPago("Pago");
         }else{
             envioDTO.setEstadoPago("No Pago");
@@ -44,13 +55,19 @@ public class EnvioMapper {
         envioDTO.setCosto(envio.getCosto());
         envioDTO.setEstado(envio.getEstado());
         envioDTO.setNombreUsuario(envio.getNombreUsuario());
-        envioDTO.setNombreRepartidor(envio.getNombreRepartidor());
+
+        //Traigo las incidencias del envío
+        if (envio.getIncidencias() != null) {
+            envioDTO.setIncidencias(new ArrayList<>(envio.getIncidencias()));
+        } else {
+            envioDTO.setIncidencias(new ArrayList<>());
+        }
+
         if (envio.getEstado() == EstadoEnvio.ASIGNADO){
             envioDTO.setEstadoPago("PAGO");
         }else{
             envioDTO.setEstadoPago("SIN PAGAR");
         }
-
         return envioDTO;
     }
 

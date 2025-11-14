@@ -23,8 +23,10 @@ import utils.PathsFxml;
 import utils.mappers.DireccionMapper;
 
 import java.net.URL;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class GestionEnviosController implements Initializable {
@@ -75,6 +77,7 @@ public class GestionEnviosController implements Initializable {
     private ObservableList<DireccionDTO> direcciones; //Creo la lista de direcciones para los datos del envío
     private EnvioDTO envioSeleccionado;
     private Usuario usuario;
+    private NumberFormat formatoPesos;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -83,6 +86,7 @@ public class GestionEnviosController implements Initializable {
         sessionManager = SessionManager.getInstancia();
         usuarioLogueado = sessionManager.getUsuarioLogueado();
         usuario = usuarioFacade.buscarUsuarioEntidad(usuarioLogueado.getId());
+        formatoPesos = NumberFormat.getCurrencyInstance(new Locale("es", "CO"));
         envios = FXCollections.observableArrayList();
         direcciones = FXCollections.observableArrayList();
         idEnvio.setDisable(true);
@@ -174,7 +178,7 @@ public class GestionEnviosController implements Initializable {
             return new javafx.beans.property.SimpleStringProperty(texto);
         });
         colCostoEnvio.setCellValueFactory(cellData ->
-                new javafx.beans.property.SimpleStringProperty(String.format("%.2f", cellData.getValue().getCosto())));
+                new javafx.beans.property.SimpleStringProperty(formatoPesos.format(cellData.getValue().getCosto())));
         colEstadoEnvio.setCellValueFactory(cellData ->
                 new javafx.beans.property.SimpleStringProperty(String.valueOf(cellData.getValue().getEstado())));
     }
@@ -199,7 +203,7 @@ public class GestionEnviosController implements Initializable {
             return;
         }
         idEnvio.setText(envioDTO.getId());
-        costoEnvioDatos.setText(String.format("%.2f", envioDTO.getCosto()));
+        costoEnvioDatos.setText(formatoPesos.format(envioDTO.getCosto()));
 
         // Convertir Direccion (entity) a DireccionDTO y buscar en la lista
         if (envioDTO.getOrigen() != null) {
@@ -252,7 +256,7 @@ public class GestionEnviosController implements Initializable {
         Direccion direccionOrigen = usuarioFacade.buscarDireccionUsuario(usuario, origen);
         Direccion direccionDestino = usuarioFacade.buscarDireccionUsuario(usuario, destino);
         envioDTO.setOrigen(direccionOrigen);
-        envioDTO.setDestino(direccionOrigen);
+        envioDTO.setDestino(direccionDestino);
 
         try {
             envioDTO.setPeso(Double.parseDouble(pesoEnvio.getText()));
@@ -306,7 +310,7 @@ public class GestionEnviosController implements Initializable {
             return;
         }
         double costo = envioFacade.cotizarEnvio(envioDTO);
-        costoEnvioDatos.setText(String.format("%.2f", costo));
+        costoEnvioDatos.setText(formatoPesos.format(costo));
         mostrarMensaje("Cotización realizada: $" + String.format("%.2f", costo), false);
     }
 

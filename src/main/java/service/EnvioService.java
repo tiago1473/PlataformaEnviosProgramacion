@@ -1,23 +1,21 @@
 package service;
-
 import models.*;
 import models.DTO.EnvioDTO;
-import models.DTO.RepartidorDTO;
+import service.CostoAdicionalStrategy.CalculadoraCostoEnvio;
 import utils.mappers.EnvioMapper;
-import utils.mappers.RepartidorMapper;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class EnvioService {
-
     private final PlataformaEnvios plataformaEnvios;
     private final UsuarioService usuarioService;
+    private final CalculadoraCostoEnvio calculadoraCostoEnvio;
 
     public EnvioService(){
         this.plataformaEnvios = PlataformaEnvios.getInstancia();
         this.usuarioService = new UsuarioService();
+        this.calculadoraCostoEnvio = new CalculadoraCostoEnvio(this);
     }
 
     public Envio crearEnvio(EnvioDTO envioDTO) {
@@ -49,25 +47,18 @@ public class EnvioService {
     }
 
     public double calcularCostoEnvio(Envio envio) {
-        double distancia = calcularDistancia(envio.getOrigen(), envio.getDestino());
-        double costo = distancia * TarifaService.TARIFA_POR_KM;
-        double adicion = 0;
-        if(envio.isFirma()){
-            adicion += costo*(1+TarifaService.EXTRA_FIRMA);
+        if (envio == null || envio.getOrigen() == null || envio.getDestino() == null) {
+            return 0.0;
         }
-        if(envio.isFragil()){
-            adicion += costo*(1+TarifaService.EXTRA_FRAGIL);
-        }
-        if(envio.isPrioridad())
-            adicion += costo*(1+TarifaService.EXTRA_PRIORIDAD);
-        if(envio.isSeguro()){
-            adicion += costo*(1+TarifaService.EXTRA_SEGURO);
-        }
-        return (costo + adicion);
+        return calculadoraCostoEnvio.calcularCostoTotal(envio);
     }
 
     public static double calcularDistancia(Direccion origen, Direccion destino) {
-        double radioTierra = 6371; // km
+        if (origen == null || destino == null ||
+                origen.getCoordenada() == null || destino.getCoordenada() == null) {
+            return 0.0;
+        }
+        double radioTierra = 6371; //En km
         double dLat = Math.toRadians(destino.getCoordenada().getLatitud() - origen.getCoordenada().getLatitud());
         double dLon = Math.toRadians(destino.getCoordenada().getLongitud() - origen.getCoordenada().getLongitud());
         double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)

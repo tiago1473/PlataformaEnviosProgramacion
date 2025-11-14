@@ -132,6 +132,14 @@ public class Envio {
         this.fechaEstimadaEntrega = fechaEstimadaEntrega;
     }
 
+    public ArrayList<Incidencia> getIncidencias() {
+        return incidencias;
+    }
+
+    public void setIncidencias(ArrayList<Incidencia> incidencias) {
+        this.incidencias = incidencias;
+    }
+
     public LocalDateTime getFechaEntrega() {
         return this.fechaEntrega;
     }
