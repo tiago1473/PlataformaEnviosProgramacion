@@ -204,7 +204,7 @@ public class GestionRepartidorAdmController {
             }
 
         } catch (Exception e) {
-            mostrarMensaje("Error al eliminar repartidor: " + e.getMessage(), true);
+            mostrarMensaje("Error: " + e.getMessage(), true);
         }
     }
 

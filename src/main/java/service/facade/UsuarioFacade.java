@@ -3,13 +3,9 @@ import models.DTO.DireccionDTO;
 import models.DTO.EnvioDTO;
 import models.DTO.UsuarioDTO;
 import models.Direccion;
-import models.Envio;
-import models.EstadoEnvio;
 import models.Usuario;
 import service.UsuarioService;
-import utils.mappers.DireccionMapper;
-import utils.mappers.EnvioMapper;
-import utils.mappers.UsuarioMapper;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,8 +65,8 @@ public class UsuarioFacade {
         return usuarioService.obtenerEnviosUsuario(id);
     }
 
-    public boolean actualizarEstadoEnvioUsuario(String usuarioId, String envioId, EstadoEnvio nuevoEstado){
-        return usuarioService.actualizarEstadoEnvioUsuario(usuarioId, envioId, nuevoEstado);
+    public boolean actualizarEstadoEnvioUsuario(String usuarioId, String envioId){
+        return usuarioService.actualizarEstadoEnvioUsuario(usuarioId, envioId);
     }
 
     public EnvioDTO buscarEnvioUsuario (String idUsuario, String idEnvio){

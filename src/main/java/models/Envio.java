@@ -1,5 +1,7 @@
 package models;
 
+import service.estadoState.EstadoEnvioState;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -13,7 +15,7 @@ public class Envio {
     private double ancho;
     private double alto;
     private double costo;
-    private EstadoEnvio estado;
+    private EstadoEnvioState estado;
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaEstimadaEntrega;
     private LocalDateTime fechaEntrega;
@@ -108,12 +110,28 @@ public class Envio {
         this.costo = costo;
     }
 
-    public EstadoEnvio getEstado() {
-        return this.estado;
+    public String getEstado() {
+        return this.estado.getNombre();
     }
 
-    public void setEstado(EstadoEnvio estado) {
+    public void setEstado(EstadoEnvioState estado) {
         this.estado = estado;
+    }
+
+    public void porAsignar(){
+        estado.porAsignar(this);
+    }
+
+    public void asignar() {
+        estado.asignar(this);
+    }
+
+    public void enRuta() {
+        estado.enRuta(this);
+    }
+
+    public void entregar() {
+        estado.entregar(this);
     }
 
     public LocalDateTime getFechaCreacion() {

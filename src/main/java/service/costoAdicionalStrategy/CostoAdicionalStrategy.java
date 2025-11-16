@@ -1,4 +1,4 @@
-package service.CostoAdicionalStrategy;
+package service.costoAdicionalStrategy;
 import models.Envio;
 
 public interface CostoAdicionalStrategy {

@@ -1,7 +1,6 @@
 package utils.mappers;
 import models.DTO.EnvioDTO;
 import models.Envio;
-import models.EstadoEnvio;
 
 import java.util.ArrayList;
 
@@ -35,8 +34,7 @@ public class EnvioMapper {
              envioDTO.setIncidencias(new ArrayList<>());
          }
 
-        if (envio.getEstado() == EstadoEnvio.POR_ASIGNAR ||  envio.getEstado() == EstadoEnvio.ENRUTA ||
-        envio.getEstado() == EstadoEnvio.ENTREGADO){
+        if (!envio.getEstado().equals("SOLICITADO")){
             envioDTO.setEstadoPago("Pago");
         }else{
             envioDTO.setEstadoPago("No Pago");
@@ -51,10 +49,17 @@ public class EnvioMapper {
         EnvioDTO envioDTO = new EnvioDTO();
         envioDTO.setId(envio.getId());
         envioDTO.setFechaCreacion(envio.getFechaCreacion());
+        envioDTO.setFechaEntrega(envio.getFechaEntrega());
+        envioDTO.setOrigen(envio.getOrigen());
         envioDTO.setDestino(envio.getDestino());
         envioDTO.setCosto(envio.getCosto());
         envioDTO.setEstado(envio.getEstado());
         envioDTO.setNombreUsuario(envio.getNombreUsuario());
+        envioDTO.setNombreRepartidor(envio.getNombreRepartidor());
+        envioDTO.setFirma(envio.isFirma());
+        envioDTO.setSeguro(envio.isSeguro());
+        envioDTO.setPrioridad(envio.isPrioridad());
+        envioDTO.setFragil(envio.isFragil());
 
         //Traigo las incidencias del envío
         if (envio.getIncidencias() != null) {
@@ -63,7 +68,7 @@ public class EnvioMapper {
             envioDTO.setIncidencias(new ArrayList<>());
         }
 
-        if (envio.getEstado() == EstadoEnvio.ASIGNADO){
+        if (!envio.getEstado().equals("SOLICITADO")){
             envioDTO.setEstadoPago("PAGO");
         }else{
             envioDTO.setEstadoPago("SIN PAGAR");

@@ -11,18 +11,34 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import models.DTO.EnvioDTO;
 import models.DTO.RepartidorDTO;
 import models.DTO.UsuarioDTO;
-import models.EstadoEnvio;
 import models.SessionManager;
+import service.estadoState.EstadoEnvioState;
+import service.estadoState.EstadoEnvioValues;
 import service.facade.AdminFacade;
 import utils.PathsFxml;
 
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class PantallaPrincipalAdministradorController {
@@ -31,13 +47,18 @@ public class PantallaPrincipalAdministradorController {
 
     @FXML    private DatePicker fechaCreacionDesde;
     @FXML    private DatePicker fechaCreacionHasta;
-    @FXML    private ComboBox<EstadoEnvio> cmbEstadoEnvio;
+    @FXML    private ComboBox<EstadoEnvioState> cmbEstadoEnvio;
+    @FXML    private Button btnMetricas;
+    @FXML    private ComboBox<String> cmbGenerarReportes;
+
+
 
     @FXML    private TableView<EnvioDTO> tblEnvios;
     @FXML    private TableColumn<EnvioDTO, String> colIdEnvio;
     @FXML    private TableColumn<EnvioDTO, String > colFechaCreacionEnvio;
+    @FXML    private TableColumn<EnvioDTO, String> colFechaEntregaEnvio;
     @FXML    private TableColumn<EnvioDTO, String> colDestino;
-    @FXML    private TableColumn<EnvioDTO, Number> colCostoEnvio;
+    @FXML    private TableColumn<EnvioDTO, String> colCostoEnvio;
     @FXML    private TableColumn<EnvioDTO, String> colEstadoPagoEnvio;
     @FXML    private TableColumn<EnvioDTO, String> colEstadoEnvio;
     @FXML    private TableColumn<EnvioDTO, String> colNombreUsuario;
@@ -45,7 +66,7 @@ public class PantallaPrincipalAdministradorController {
 
     @FXML    private TextField txtIdEnvio;
     @FXML    private TextField txtIncidencia;
-    @FXML    private ComboBox<EstadoEnvio> cmbCambioEstadoEnvio;
+    @FXML    private ComboBox<EstadoEnvioState> cmbCambioEstadoEnvio;
     @FXML    private ComboBox<RepartidorDTO> cmbRepartidor;
 
     @FXML    private Label lblMensaje;
@@ -57,6 +78,8 @@ public class PantallaPrincipalAdministradorController {
     private EnvioDTO envioSeleccionado;
     private UsuarioDTO usuarioLogueado;
     private SessionManager sessionManager;
+    private NumberFormat cop;
+    private DateTimeFormatter formatter;
 
     public void initialize() {
         adminFacade = new AdminFacade();
@@ -73,24 +96,51 @@ public class PantallaPrincipalAdministradorController {
         configurarSeleccionTablaEnvios();
         cargarRepartidores();
         configurarFiltros();
-        cmbEstadoEnvio.setItems(FXCollections.observableArrayList(EstadoEnvio.values()));
-        cmbCambioEstadoEnvio.setItems(FXCollections.observableArrayList(EstadoEnvio.values()));
+        cop = NumberFormat.getCurrencyInstance(new java.util.Locale("es", "CO"));
+        formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        cmbEstadoEnvio.setItems(FXCollections.observableArrayList(EstadoEnvioValues.values()));
+        cmbEstadoEnvio.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(EstadoEnvioState estado) {
+                return estado == null ? "" : estado.getNombre();
+            }
+            @Override
+            public EstadoEnvioState fromString(String string) {
+                return null;
+            }
+        });
+        cmbCambioEstadoEnvio.setItems(FXCollections.observableArrayList(EstadoEnvioValues.values()));
+        cmbCambioEstadoEnvio.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(EstadoEnvioState estado) {
+                return estado == null ? "" : estado.getNombre();
+            }
+            @Override
+            public EstadoEnvioState fromString(String string) {
+                return null;
+            }
+        });
         cmbRepartidor.setItems(FXCollections.observableArrayList(adminFacade.obtenerTodosLosRepartidores()));
+        configurarComboReportes();
     }
 
     private void configurarTablaEnvios() {
         colIdEnvio.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId()));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         colFechaCreacionEnvio.setCellValueFactory(cellData -> {
             LocalDateTime fecha = cellData.getValue().getFechaCreacion();
             return new SimpleStringProperty((fecha != null) ? fecha.format(formatter) : "Sin fecha");
         });
-        colDestino.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDestino().getCiudad()));
-        colCostoEnvio.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getCosto()));
+        colFechaEntregaEnvio.setCellValueFactory(cellData -> {
+            LocalDateTime fecha = cellData.getValue().getFechaEntrega();
+            return new SimpleStringProperty((fecha != null) ? fecha.format(formatter) : "Sin fecha");
+        });
+
+        colCostoEnvio.setCellValueFactory(cellData -> new SimpleStringProperty(cop.format(cellData.getValue().getCosto())));
         colEstadoPagoEnvio.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEstadoPago()));
-        colEstadoEnvio.setCellValueFactory(cellData-> new SimpleStringProperty(cellData.getValue().getEstado().toString()));
+        colEstadoEnvio.setCellValueFactory(cellData-> new SimpleStringProperty(cellData.getValue().getEstado()));
         colNombreUsuario.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNombreUsuario()));
         colNombreRepartidor.setCellValueFactory(cellData -> new SimpleStringProperty((cellData.getValue().getNombreRepartidor() != null) ? cellData.getValue().getNombreRepartidor() : "No Asignado"));
+        colDestino.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDestino().getCiudad()));
         tblEnvios.setItems(listaEnvios);
     }
 
@@ -127,9 +177,10 @@ public class PantallaPrincipalAdministradorController {
     }
 
     private void aplicarFiltros() {
+        tblEnvios.getSelectionModel().clearSelection();
         LocalDate desde = fechaCreacionDesde.getValue();
         LocalDate hasta = fechaCreacionHasta.getValue();
-        EstadoEnvio estadoSeleccionado = cmbEstadoEnvio.getValue();
+        EstadoEnvioState estadoSeleccionado = cmbEstadoEnvio.getValue();
 
         listaEnviosFiltrados.clear();
 
@@ -144,7 +195,7 @@ public class PantallaPrincipalAdministradorController {
             if (hasta != null && (fechaCreacion == null || fechaCreacion.isAfter(hasta))) {
                 coincide = false;
             }
-            if (estadoSeleccionado != null && envio.getEstado() != estadoSeleccionado) {
+            if (estadoSeleccionado != null && !envio.getEstado().equals(estadoSeleccionado.getNombre())) {
                 coincide = false;
             }
             if (coincide) {
@@ -188,19 +239,22 @@ public class PantallaPrincipalAdministradorController {
                 mostrarMensaje("No ha seleccionado una opción para cambio de estado", true);
                 return;
             }
-            envioSeleccionado.setEstado(cmbCambioEstadoEnvio.getValue());
 
-            if (adminFacade.registrarCambioEstado(envioSeleccionado.getId(),envioSeleccionado.getEstado())) {
+            if (adminFacade.registrarCambioEstado(envioSeleccionado.getId(),cmbCambioEstadoEnvio.getValue().getNombre())) {
                 mostrarMensaje("Se registro el cambio de estado al envio " +envioSeleccionado.getId(), false);
                 cmbEstadoEnvio.getSelectionModel().clearSelection();
                 tblEnvios.refresh();
+                envioSeleccionado.setEstado(cmbCambioEstadoEnvio.getValue().getNombre());
             } else {
                 mostrarMensaje("Error: No se pudo hacer el registro del cambio de estado al envio", true);
             }
 
+        } catch (IllegalArgumentException |IllegalStateException e) {
+            mostrarMensaje("Error: " + e.getMessage(), true);
+
         } catch (Exception e) {
-            mostrarMensaje("Error al registrar el cambio de estado al envio: " + e.getMessage(), true);
-        }
+        mostrarMensaje("Ocurrió un error inesperado: " + e.getMessage(), true);
+    }
     }
 
     @FXML
@@ -214,28 +268,296 @@ public class PantallaPrincipalAdministradorController {
                 mostrarMensaje("No ha seleccionado un repartidor para asignar", true);
                 return;
             }
-            envioSeleccionado.setNombreRepartidor(cmbRepartidor.getValue().getNombre());
-
+            if (envioSeleccionado.getEstado().equals("EN_RUTA")){
+                mostrarMensaje("El envio ya se encuentra en RUTA", true);
+                return;
+            }
+            if (envioSeleccionado.getEstado().equals("ENTREGADO")){
+                mostrarMensaje("El envio ya se encuentra en ENTREGADO", true);
+                return;
+            }
+            if (envioSeleccionado.getEstado().equals("SOLICITADO")){
+                mostrarMensaje("No se puede asignar un envio en estado SOLICITADO, se debe pagar primero", true);
+                return;
+            }
             if (adminFacade.registrarCambioRepartidor(envioSeleccionado.getId(),cmbRepartidor.getValue().getId())) {
                 mostrarMensaje("Se registro la asignación de repartidor al envio " +envioSeleccionado.getId(), false);
+                envioSeleccionado.setNombreRepartidor(cmbRepartidor.getValue().getNombre());
+                envioSeleccionado.setEstado("ASIGNADO");
                 cmbEstadoEnvio.getSelectionModel().clearSelection();
                 tblEnvios.refresh();
             } else {
-                mostrarMensaje("Error: No se pudo hacer la asignación de repartidor al envio", true);
+                mostrarMensaje("Error: El envio ya se encuentra en ruta o entregado", true);
             }
 
         } catch (Exception e) {
-            mostrarMensaje("Error al asignar el repartidor al envio: " + e.getMessage(), true);
+            mostrarMensaje("Error: " + e.getMessage(), true);
         }
     }
 
     @FXML
     void panelMetricas(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(PathsFxml.PATH_PANEL_METRICAS));
+            Parent root = loader.load();
 
+            Stage adminStage = (Stage) btnMetricas.getScene().getWindow();
+
+            Stage metricasStage = new Stage();
+            metricasStage.setTitle("Panel de Métricas");
+            metricasStage.setScene(new Scene(root,600,440));
+            metricasStage.initOwner(adminStage);
+
+            metricasStage.setOnCloseRequest(closeEvent -> {
+                try {
+                    adminStage.show();
+                } catch (Exception e) {
+                    System.out.println("Error al mostrar la ventana del administrador: " + e.getMessage());
+                }
+            });
+
+            adminStage.hide();
+
+            metricasStage.show();
+
+        } catch (IOException e) {
+            mostrarMensaje("Error cargando panelMetricas.fxml: " + e.getMessage(),true);
+            System.out.println("Error cargando panelMetricas.fxml: " + e.getMessage());
+        }
     }
 
+    private void configurarComboReportes(){
+        cmbGenerarReportes.getItems().addAll(
+                "Reporte de Envios Same-Day",
+                "Envios por Repartidor",
+                "Reporte Servicios Adicionales"
+        );
 
+        cmbGenerarReportes.setOnAction(event -> {
+            String opcion = cmbGenerarReportes.getSelectionModel().getSelectedItem();
 
+            if (opcion == null) return;
+
+            switch (opcion) {
+                case "Reporte de Envios Same-Day" ->
+                        mostrarReporteEntregas();
+
+                case "Envios por Repartidor" ->
+                        mostrarReporteEnviosPorRepartidor();
+
+                case "Reporte Servicios Adicionales" ->
+                        mostrarReportePorServiciosAdicionales();
+            }
+        });
+    }
+
+    @FXML
+    void mostrarReporteEntregas() {
+        List<EnvioDTO> fuente = listaEnviosFiltrados.isEmpty()
+                ? listaEnvios
+                : listaEnviosFiltrados;
+
+        try {
+            List<String> lineas = fuente.stream()
+                    .map(this::toCsvLineaEnvio)
+                    .collect(Collectors.toList());
+
+            int totalEnvios = fuente.size();
+            double totalCosto = fuente.stream()
+                    .mapToDouble(EnvioDTO::getCosto)
+                    .sum();
+
+            String totalCostoCOP = cop.format(totalCosto);
+
+            Path destino = Paths.get(
+                    System.getProperty("user.home"),
+                    "reporte_envios.csv"
+            );
+
+            String contenido =
+                    "ID;Origen;Destino;Costo;FechaCreacion;FechaEntrega;Estado;EstadoPago\n"
+                            + String.join("\n", lineas)
+                            + "\n\n"                     // Línea en blanco
+                            + "TOTAL ENVÍOS:;" + totalEnvios + "\n"
+                            + "TOTAL COSTO ENVIOS:;" + totalCostoCOP + "\n";
+
+            // BOM para Excel
+            String contenidoUTF8 = "\uFEFF" + contenido;
+
+            Files.write(
+                    destino,
+                    contenidoUTF8.getBytes(java.nio.charset.StandardCharsets.UTF_8)
+            );
+
+            mostrarMensaje("Reporte de envíos exportado en: " + destino, false);
+
+            File archivo = destino.toFile();
+            if (archivo.exists() && Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(archivo);
+            }
+
+        } catch (Exception e) {
+            mostrarMensaje("Error exportando reporte de envíos: " + e.getMessage(), true);
+        }
+    }
+
+    @FXML
+    void mostrarReporteEnviosPorRepartidor() {
+
+        List<EnvioDTO> fuente = listaEnviosFiltrados.isEmpty()
+                ? listaEnvios
+                : listaEnviosFiltrados;
+
+        try{
+            Map<String, List<EnvioDTO>> agrupados = fuente.stream()
+                    .sorted(Comparator.comparing(
+                            e -> e.getNombreRepartidor() == null ? "SIN REPARTIDOR" : e.getNombreRepartidor(),
+                            String::compareToIgnoreCase
+                    ))
+                    .collect(Collectors.groupingBy(
+                            e -> e.getNombreRepartidor() == null ? "SIN REPARTIDOR" : e.getNombreRepartidor(),
+                            LinkedHashMap::new,
+                            Collectors.toList()
+                    ));
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("REPORTE DE ENVIOS POR REPARTIDOR\n\n");
+
+            double totalGeneral = 0;
+
+            for (Map.Entry<String, List<EnvioDTO>> entry : agrupados.entrySet()) {
+
+                String nombreRepartidor = entry.getKey();
+                List<EnvioDTO> envios = entry.getValue();
+
+                sb.append("REPARTIDOR: ").append(nombreRepartidor).append("\n");
+                sb.append("ID;Origen;Destino;Costo;FechaCreacion;FechaEntrega;Estado;EstadoPago\n");
+
+                double totalRepartidor = 0;
+
+                for (EnvioDTO e : envios) {
+                    sb.append(toCsvLineaEnvio(e)).append("\n");
+                    totalRepartidor += e.getCosto();
+                }
+
+                totalGeneral += totalRepartidor;
+
+                sb.append("TOTAL COSTO ").append(nombreRepartidor).append(";")
+                        .append(cop.format(totalRepartidor))
+                        .append("\n\n");
+            }
+
+            sb.append("TOTAL GENERAL DE COSTOS;")
+                    .append(cop.format(totalGeneral))
+                    .append("\n");
+
+            String contenidoUTF8 = "\uFEFF" + sb.toString();
+
+            Path destino = Paths.get(
+                    System.getProperty("user.home"),
+                    "reporte_envios_por_repartidor.csv"
+            );
+
+            Files.write(destino, contenidoUTF8.getBytes(StandardCharsets.UTF_8));
+
+            mostrarMensaje("Reporte de envíos por repartidor exportado en: " + destino, false);
+
+            File archivo = destino.toFile();
+            if (archivo.exists() && Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(archivo);
+            }
+
+        } catch (Exception e) {
+            mostrarMensaje("Error exportando reporte: " + e.getMessage(), true);
+        }
+    }
+
+    @FXML
+    void mostrarReportePorServiciosAdicionales() {
+
+        List<EnvioDTO> fuente = listaEnviosFiltrados.isEmpty()
+                ? listaEnvios
+                : listaEnviosFiltrados;
+        try {
+            Map<String, List<EnvioDTO>> porServicio = new LinkedHashMap<>();
+            porServicio.put("ENVIOS CON SEGURO ADICIONAL", new ArrayList<>());
+            porServicio.put("ENVIOS FRÁGILES", new ArrayList<>());
+            porServicio.put("ENVIOS CON FIRMA", new ArrayList<>());
+            porServicio.put("ENVIOS CON PRIORIDAD", new ArrayList<>());
+
+            for (EnvioDTO envio : fuente) {
+                if (envio.isSeguro()) {
+                    porServicio.get("ENVIOS CON SEGURO ADICIONAL").add(envio);
+                }
+                if (envio.isFragil()) {
+                    porServicio.get("ENVIOS FRÁGILES").add(envio);
+                }
+                if (envio.isFirma()) {
+                    porServicio.get("ENVIOS CON FIRMA").add(envio);
+                }
+                if (envio.isPrioridad()) {
+                    porServicio.get("ENVIOS CON PRIORIDAD").add(envio);
+                }
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("REPORTE DE ENVIOS POR SERVICIOS ADICIONALES\n");
+
+            for (Map.Entry<String, List<EnvioDTO>> entry : porServicio.entrySet()) {
+                String titulo = entry.getKey();
+                List<EnvioDTO> lista = entry.getValue();
+                sb.append("\n\n=== ").append(titulo).append(" ===\n");
+                sb.append("ID;Origen;Destino;Costo;FechaCreacion;FechaEntrega;Estado;EstadoPago\n");
+
+                for (EnvioDTO e : lista) {
+                    sb.append(toCsvLineaEnvio(e)).append("\n");
+                }
+            }
+
+            String contenidoUTF8 = "\uFEFF" + sb;
+
+            Path destino = Paths.get(
+                    System.getProperty("user.home"),
+                    "reporte_envios_por_servicio.csv"
+            );
+
+            Files.write(
+                    destino,
+                    contenidoUTF8.getBytes(java.nio.charset.StandardCharsets.UTF_8)
+            );
+
+            mostrarMensaje("Reporte por servicios adicionales exportado en: " + destino, false);
+
+            File archivo = destino.toFile();
+            if (archivo.exists() && Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(archivo);
+            }
+
+        } catch (Exception e) {
+            mostrarMensaje("Error exportando reporte de servicios adicionales: " + e.getMessage(), true);
+        }
+    }
+
+    private String toCsvLineaEnvio(EnvioDTO e) {
+
+        return String.join(";",
+                csv(e.getId()),
+                csv(e.getOrigen() != null ? e.getOrigen().getCiudad() : ""),
+                csv(e.getDestino() != null ? e.getDestino().getCiudad() : ""),
+                csv(e.getCosto()),
+                csv(e.getFechaCreacion() != null ? e.getFechaCreacion().format(formatter) : ""),
+                csv(e.getFechaEntrega() != null ? e.getFechaEntrega().format(formatter) : ""),
+                csv(e.getEstado()),
+                csv(e.getEstadoPago())
+        );
+    }
+
+    private String csv(Object o) {
+        if (o == null) return "\"\"";
+        String v = String.valueOf(o);
+        v = v.replace("\"", "\"\"");
+        return "\"" + v + "\"";
+    }
 
 
     @FXML
@@ -250,7 +572,6 @@ public class PantallaPrincipalAdministradorController {
             stage.show();
         } catch (Exception e) {
             mostrarMensaje("Error al cerrar sesión: " + e.getMessage(), true);
-            e.printStackTrace();
         }
 
     }
@@ -265,8 +586,7 @@ public class PantallaPrincipalAdministradorController {
             stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
-            mostrarMensaje("Error al abrir Gestión de Repartidores: " + e.getMessage(), true);
-            e.printStackTrace();
+            mostrarMensaje("Error: " + e.getMessage(), true);
         }
     }
 
@@ -280,8 +600,7 @@ public class PantallaPrincipalAdministradorController {
             stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
-            mostrarMensaje("Error al abrir Gestión de Usuarios: " + e.getMessage(), true);
-            e.printStackTrace();
+            mostrarMensaje("Error: " + e.getMessage(), true);
         }
 
     }
@@ -303,6 +622,7 @@ public class PantallaPrincipalAdministradorController {
         cmbEstadoEnvio.getSelectionModel().clearSelection();
         cmbRepartidor.getSelectionModel().clearSelection();
         cmbCambioEstadoEnvio.getSelectionModel().clearSelection();
+        cmbGenerarReportes.getSelectionModel().clearSelection();
 
         envioSeleccionado=null;
         tblEnvios.getSelectionModel().clearSelection();

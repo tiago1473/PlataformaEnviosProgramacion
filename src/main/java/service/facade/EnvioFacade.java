@@ -2,11 +2,9 @@ package service.facade;
 
 import models.DTO.DireccionDTO;
 import models.DTO.EnvioDTO;
-import models.EstadoEnvio;
 import service.EnvioService;
 import service.UsuarioService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class EnvioFacade {
@@ -20,7 +18,6 @@ public class EnvioFacade {
     }
 
     public boolean crearEnvioUsuario(String usuarioId, EnvioDTO envioDTO) {
-        envioDTO.setEstado(EstadoEnvio.SOLICITADO);
         return envioService.agregarEnvioUsuario(usuarioId, envioDTO);
     }
 

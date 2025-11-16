@@ -1,7 +1,8 @@
 package service;
 import models.*;
 import models.DTO.EnvioDTO;
-import service.CostoAdicionalStrategy.CalculadoraCostoEnvio;
+import service.costoAdicionalStrategy.CalculadoraCostoEnvio;
+import service.estadoState.EstadoEnvioState;
 import utils.mappers.EnvioMapper;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,8 +27,7 @@ public class EnvioService {
                 envioDTO.getPeso(),
                 envioDTO.getLargo(),
                 envioDTO.getAncho(),
-                envioDTO.getAlto(),
-                envioDTO.getEstado());
+                envioDTO.getAlto());
 
         if (envioDTO.isFirma()) {
             envioBuilder.withFirma();
@@ -105,7 +105,7 @@ public class EnvioService {
 
     public boolean modificarEnvioUsuario(String usuarioId, String envioId, EnvioDTO envioDTO) {
         Envio envio = buscarEnvioUsuarioEntity(usuarioId, envioId);
-        if (envio == null || envio.getEstado() != EstadoEnvio.SOLICITADO) { //Solo lo puedo modificar si es SOLICITADO
+        if (envio == null || envio.getEstado().equals("SOLICITADO") ||envio.getEstado().equals("POR_ASIGNAR")||envio.getEstado().equals("ASIGNADO")) { //Solo lo puedo modificar si es SOLICITADO
             return false;
         }
         envio.setOrigen(envioDTO.getOrigen());
@@ -124,7 +124,7 @@ public class EnvioService {
 
     public boolean cancelarEnvioUsuario(String usuarioId, String envioId) {
         Envio envio = buscarEnvioUsuarioEntity(usuarioId, envioId);
-        if (envio == null || envio.getEstado() != EstadoEnvio.SOLICITADO) {
+        if (envio == null || envio.getEstado().equals("SOLICITADO") ||envio.getEstado().equals("POR_ASIGNAR")) {
             return false;
         }
         Usuario usuario = usuarioService.buscarUsuarioEntidad(usuarioId);
@@ -161,12 +161,23 @@ public class EnvioService {
         return true;
     }
 
-    public boolean registrarCambioEstado(String idEnvio, EstadoEnvio estadoEnvio) {
-        Envio envio=buscarEnvioEntity(idEnvio);
+    public boolean registrarCambioEstado(String idEnvio, String estadoEnvio) {
+        Envio envio = buscarEnvioEntity(idEnvio);
         if (envio == null) {
-            return false;
+              throw new IllegalArgumentException("No existe el envío con id: " + idEnvio);
         }
-        envio.setEstado(estadoEnvio);
-        return true;
+
+        switch (estadoEnvio) {
+            case "ASIGNADO":
+                envio.asignar();
+            case "EN_RUTA":
+                envio.enRuta();
+                return true;
+            case "ENTREGADO":
+                envio.entregar();
+                return true;
+            default:
+                throw new IllegalArgumentException("Estado inválido: " + estadoEnvio);
+        }
     }
 }

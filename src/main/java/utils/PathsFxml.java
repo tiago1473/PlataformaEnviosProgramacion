@@ -9,4 +9,5 @@ public class PathsFxml {
     public static final String PATH_PANTALLA_PRINCIPAL_USUARIO = "/pantallaPrincipalUsuario.fxml";
     public static final String PATH_GESTION_USUARIO = "/gestionUsuario.fxml";
     public static final String PATH_GESTION_ENVIOS = "/gestionEnvios.fxml";
+    public static final String PATH_PANEL_METRICAS = "/panelMetricas.fxml";
 }

@@ -1,4 +1,7 @@
 package models;
+import service.estadoState.EstadoEnvioState;
+import service.estadoState.SolicitadoState;
+
 import java.time.LocalDateTime;
 
 public class EnvioBuilder {
@@ -10,7 +13,7 @@ public class EnvioBuilder {
     double ancho;
     double alto;
     double costo;
-    EstadoEnvio estado;
+    EstadoEnvioState estado;
     LocalDateTime fechaCreacion;
     LocalDateTime fechaEstimadaEntrega;
     boolean seguro;
@@ -19,14 +22,14 @@ public class EnvioBuilder {
     boolean prioridad;
 
     public EnvioBuilder(Direccion origen, Direccion destino, double peso, double largo,
-                        double ancho, double alto, EstadoEnvio estado) {
+                        double ancho, double alto) {
         this.origen = origen;
         this.destino = destino;
         this.peso = peso;
         this.largo = largo;
         this.ancho = ancho;
         this.alto = alto;
-        this.estado = estado;
+        this.estado = new SolicitadoState();
         this.fechaCreacion = LocalDateTime.now();
         this.fechaEstimadaEntrega= fechaCreacion.plusDays(15);
     }

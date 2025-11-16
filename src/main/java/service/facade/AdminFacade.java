@@ -1,12 +1,12 @@
 package service.facade;
 
 import models.DTO.*;
-import models.EstadoEnvio;
 import models.Repartidor;
 import models.Usuario;
 import service.EnvioService;
 import service.RepartidorService;
 import service.UsuarioService;
+import service.estadoState.EstadoEnvioState;
 
 import java.util.List;
 
@@ -99,7 +99,7 @@ public class AdminFacade {
         return envioService.registrarIncidencia(idEnvio,incidencia);
     }
 
-    public boolean registrarCambioEstado(String idEnvio, EstadoEnvio estadoEnvio) {
+    public boolean registrarCambioEstado(String idEnvio, String estadoEnvio) {
         return envioService.registrarCambioEstado(idEnvio,estadoEnvio);
     }
 

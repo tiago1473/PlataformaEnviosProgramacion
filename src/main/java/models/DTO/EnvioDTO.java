@@ -1,7 +1,7 @@
 package models.DTO;
 import models.Direccion;
-import models.EstadoEnvio;
 import models.Incidencia;
+import service.estadoState.EstadoEnvioState;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public class EnvioDTO {
     private double ancho;
     private double alto;
     private double costo;
-    private EstadoEnvio estado;
+    private String estado;
     private boolean seguro;
     private boolean fragil;
     private boolean firma;
@@ -134,11 +134,11 @@ public class EnvioDTO {
         this.alto = alto;
     }
 
-    public EstadoEnvio getEstado() {
+    public String getEstado() {
         return this.estado;
     }
 
-    public void setEstado(EstadoEnvio estado) {
+    public void setEstado(String estado) {
         this.estado = estado;
     }
 
@@ -188,4 +188,5 @@ public class EnvioDTO {
     public void setNombreRepartidor(String nombreRepartidor) {
         this.nombreRepartidor = nombreRepartidor;
     }
+
 }

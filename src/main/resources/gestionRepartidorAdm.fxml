@@ -102,7 +102,7 @@
         </columns>
       </TableView>
       <Button layoutX="547.0" layoutY="546.0" mnemonicParsing="false" onAction="#regresarVista" prefHeight="26.0" prefWidth="228.0" text="Regresar a vista Administrador" />
-      <Label fx:id="lblMensaje" layoutX="25.0" layoutY="550.0" prefHeight="18.0" prefWidth="335.0" textFill="RED" />
+      <Label fx:id="lblMensaje" layoutX="25.0" layoutY="550.0" prefHeight="18.0" prefWidth="518.0" textFill="RED" />
       <Label layoutX="365.0" layoutY="37.0" text="SameDay" textAlignment="CENTER" textOverrun="CLIP">
          <font>
             <Font size="15.0" />

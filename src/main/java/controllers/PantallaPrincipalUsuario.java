@@ -9,15 +9,22 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import models.DTO.EnvioDTO;
 import models.DTO.UsuarioDTO;
-import models.EstadoEnvio;
 import models.Incidencia;
 import models.SessionManager;
 import models.Usuario;
+import service.estadoState.EstadoEnvioState;
+import service.estadoState.EstadoEnvioValues;
 import service.facade.UsuarioFacade;
 import utils.PathsFxml;
+
+import java.awt.*;
+import java.io.File;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.time.LocalDate;
@@ -59,7 +66,7 @@ public class PantallaPrincipalUsuario implements Initializable {
     @FXML
     private TextField costoEnvioParaPago;
     @FXML
-    private ComboBox<EstadoEnvio> estadoEnvio;
+    private ComboBox<EstadoEnvioState> estadoEnvio;
     @FXML
     private DatePicker fechaCreacionDesde;
     @FXML
@@ -146,7 +153,7 @@ public class PantallaPrincipalUsuario implements Initializable {
         if (envioDTOSeleccionado == null) {
             return;
         }
-        if (envioDTOSeleccionado.getEstado() == EstadoEnvio.SOLICITADO) { //Para que se habilite el pago
+        if (envioDTOSeleccionado.getEstado().equals("SOLICITADO")) { //Para que se habilite el pago
             txtIdEnvioParaPago.setText(envioDTOSeleccionado.getId());
             costoEnvioParaPago.setText(formatoPesos.format(envioDTOSeleccionado.getCosto()));
         }
@@ -165,7 +172,17 @@ public class PantallaPrincipalUsuario implements Initializable {
     }
 
     private void configurarFiltros() {
-        estadoEnvio.getItems().setAll(EstadoEnvio.values());
+        estadoEnvio.setItems(FXCollections.observableArrayList(EstadoEnvioValues.values()));
+        estadoEnvio.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(EstadoEnvioState estado) {
+                return estado == null ? "" : estado.getNombre();
+            }
+            @Override
+            public EstadoEnvioState fromString(String string) {
+                return null;
+            }
+        });
 
         //Llama a aplicarFiltros cada que hay un cambio
         fechaCreacionDesde.valueProperty().addListener((obs, oldV, newV) -> aplicarFiltros());
@@ -183,7 +200,7 @@ public class PantallaPrincipalUsuario implements Initializable {
     private void aplicarFiltros() {
         LocalDate desde = fechaCreacionDesde.getValue();
         LocalDate hasta = fechaCreacionHasta.getValue();
-        EstadoEnvio estadoSeleccionado = estadoEnvio.getValue();
+        EstadoEnvioState estadoSeleccionado = estadoEnvio.getValue();
 
         enviosFiltrados.clear();
 
@@ -203,7 +220,7 @@ public class PantallaPrincipalUsuario implements Initializable {
             }
 
             //Filtramos por Estado
-            if (estadoSeleccionado != null && envio.getEstado() != estadoSeleccionado) {
+            if (estadoSeleccionado != null && !envio.getEstado().equals(estadoSeleccionado.getNombre())) {
                 coincide = false;
             }
 
@@ -268,6 +285,10 @@ public class PantallaPrincipalUsuario implements Initializable {
                     "ID;Origen;Destino;Costo;FechaCreacion;FechaEntrega;Estado;EstadoPago\n"
                             + String.join("\n", lineas)).getBytes(java.nio.charset.StandardCharsets.UTF_8));
             mostrarMensaje("Reporte de envíos exportado en: " + destino, false);
+            File archivo = destino.toFile();
+            if (archivo.exists() && Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(archivo);
+            }
         } catch (Exception e) {
             mostrarMensaje("Error exportando reporte de envíos: " + e.getMessage(), true);
             e.printStackTrace();
@@ -304,6 +325,10 @@ public class PantallaPrincipalUsuario implements Initializable {
                     "ID;Origen;Destino;Costo;FechaCreacion;FechaEntrega;Estado;EstadoPago\n"
                             + String.join("\n", lineas)).getBytes(java.nio.charset.StandardCharsets.UTF_8));
             mostrarMensaje("Reporte de pagos exportado en: " + destino, false);
+            File archivo = destino.toFile();
+            if (archivo.exists() && Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(archivo);
+            }
         } catch (Exception e) {
             mostrarMensaje("Error exportando reporte de pagos: " + e.getMessage(), true);
             e.printStackTrace();
@@ -394,13 +419,13 @@ public class PantallaPrincipalUsuario implements Initializable {
             mostrarMensaje("Envío no encontrado", true);
             return;
         }
-        if (envio.getEstado() != EstadoEnvio.SOLICITADO) {
+        if (!envio.getEstado().equals("SOLICITADO")) {
             mostrarMensaje("Solo se pueden pagar envíos en estado SOLICITADO", true);
             return;
         }
 
         //Cambio el Modelo
-        boolean validacion = usuarioFacade.actualizarEstadoEnvioUsuario(usuario.getId(), envio.getId(), EstadoEnvio.POR_ASIGNAR);
+        boolean validacion = usuarioFacade.actualizarEstadoEnvioUsuario(usuario.getId(), envio.getId());
         if (!validacion) {
             mostrarMensaje("No fue posible actualizar el estado del envío en el modelo", true);
             return;

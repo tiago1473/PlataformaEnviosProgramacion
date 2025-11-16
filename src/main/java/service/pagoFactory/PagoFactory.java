@@ -1,4 +1,4 @@
-package service.pago;
+package service.pagoFactory;
 
 public class PagoFactory {
     public static MetodoPago crearPago(String tipo) {

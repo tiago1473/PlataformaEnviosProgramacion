@@ -70,10 +70,10 @@
           <RowConstraints maxHeight="39.4" minHeight="10.0" prefHeight="39.4" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label alignment="CENTER" nodeOrientation="RIGHT_TO_LEFT" text="Peso" textAlignment="CENTER" />
-            <Label text="Largo" textAlignment="CENTER" GridPane.columnIndex="1" />
-            <Label text="Ancho" textAlignment="CENTER" GridPane.columnIndex="2" />
-            <Label text="Alto" textAlignment="CENTER" GridPane.columnIndex="3" />
+            <Label alignment="CENTER" nodeOrientation="RIGHT_TO_LEFT" text="Peso (Kg)" textAlignment="CENTER" />
+            <Label text="Largo (cm)" textAlignment="CENTER" GridPane.columnIndex="1" />
+            <Label text="Ancho (cm)" textAlignment="CENTER" GridPane.columnIndex="2" />
+            <Label text="Alto (cm)" textAlignment="CENTER" GridPane.columnIndex="3" />
             <TextField fx:id="pesoEnvio" GridPane.rowIndex="1" />
             <TextField fx:id="largoEnvio" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="anchoEnvio" GridPane.columnIndex="2" GridPane.rowIndex="1" />

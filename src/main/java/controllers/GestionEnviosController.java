@@ -14,7 +14,6 @@ import models.DTO.DireccionDTO;
 import models.DTO.EnvioDTO;
 import models.DTO.UsuarioDTO;
 import models.Direccion;
-import models.EstadoEnvio;
 import models.SessionManager;
 import models.Usuario;
 import service.facade.EnvioFacade;
@@ -288,8 +287,8 @@ public class GestionEnviosController implements Initializable {
             mostrarMensaje("Seleccione un envío para cancelar", true);
             return;
         }
-        if (envioSeleccionado.getEstado() != EstadoEnvio.SOLICITADO) {
-            mostrarMensaje("Solo se pueden cancelar envíos en estado SOLICITADO", true);
+        if (!envioSeleccionado.getEstado().equals("SOLICITADO")) {
+            mostrarMensaje("Solo se pueden cancelar envios en estado SOLICITADO", true);
             return;
         }
         boolean resultadoCancelacion = envioFacade.cancelarEnvioUsuario(usuarioLogueado.getId(), envioSeleccionado.getId());
@@ -298,7 +297,7 @@ public class GestionEnviosController implements Initializable {
             cargarEnvios();
             limpiarCampos();
         } else {
-            mostrarMensaje("Error al cancelar el envío", true);
+            mostrarMensaje("Error al cancelar el envío, ya se encuentra en ruta o ya fue entregado", true);
         }
     }
 
@@ -361,7 +360,7 @@ public class GestionEnviosController implements Initializable {
             return;
         }
 
-        if (envioSeleccionado.getEstado() != EstadoEnvio.SOLICITADO) {
+        if (!envioSeleccionado.getEstado().equals("SOLICITADO")){
             mostrarMensaje("Solo se pueden modificar envíos en estado SOLICITADO", true);
             return;
         }

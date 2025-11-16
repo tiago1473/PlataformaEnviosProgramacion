@@ -56,6 +56,9 @@ public class RepartidorService {
             return false;
         }
         RepartidorMapper.updateEntityFromDTO(repartidor, repartidorDTO);
+        for (Envio envio : repartidor.getEnvios()){
+            envio.setNombreRepartidor(repartidor.getNombre());
+        }
         return true;
     }
 
@@ -64,6 +67,20 @@ public class RepartidorService {
         Repartidor repartidor = buscarRepartidorEntity(id);
         if (repartidor == null) {
             return false;
+        }
+        if (plataformaEnvios.getRepartidores().size() <= 1) {
+            throw new IllegalStateException("No se puede eliminar al repartidor: no hay otro disponible para reasignar los envíos.");
+        }
+        Repartidor nuevoRepartidor = null;
+        for (Repartidor r : plataformaEnvios.getRepartidores()) {
+            if (!r.getId().equals(repartidor.getId())) {
+                nuevoRepartidor = r;
+                break;
+            }
+        }
+        for (Envio envio : repartidor.getEnvios()){
+            envio.setNombreRepartidor(nuevoRepartidor.getNombre());
+            nuevoRepartidor.addEnvios(envio);
         }
         plataformaEnvios.getRepartidores().remove(repartidor);
         return true;
@@ -84,9 +101,20 @@ public class RepartidorService {
         if (repartidor == null|| envio==null) {
             return false;
         }
+        if (plataformaEnvios.getRepartidores().size() <= 1) {
+            throw new IllegalStateException("No se puede eliminar el envio: no hay otro repartidor para asignarlo.");
+        }
+        Repartidor nuevoRepartidor = null;
+        for (Repartidor r : plataformaEnvios.getRepartidores()) {
+            if (!r.getId().equals(repartidor.getId())) {
+                nuevoRepartidor = r;
+                break;
+            }
+        }
+        envio.setNombreRepartidor(nuevoRepartidor.getNombre());
+        nuevoRepartidor.addEnvios(envio);
         repartidor.getEnvios().remove(envio);
         return true;
-
     }
 
     public boolean registrarCambioRepartidor(String idEnvio,String idRepartidor) {
@@ -95,7 +123,15 @@ public class RepartidorService {
         if (repartidor == null|| envio==null) {
             return false;
         }
-        repartidor.addEnvios(envio);
+        if (envio.getNombreRepartidor()!=null) {
+            repartidor.addEnvios(envio);
+            envio.setNombreRepartidor(repartidor.getNombre());
+        }else {
+            repartidor.addEnvios(envio);
+            envio.setNombreRepartidor(repartidor.getNombre());
+            envio.asignar();
+        }
+
         return true;
     }
 

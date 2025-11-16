@@ -67,14 +67,15 @@
         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#efefef" height="200.0" layoutX="14.0" layoutY="237.0" stroke="BLACK" strokeType="INSIDE" width="802.0" />
         <TableView fx:id="tblEnvios" layoutX="23.0" layoutY="251.0" prefHeight="170.0" prefWidth="786.0">
             <columns>
-                <TableColumn fx:id="colIdEnvio" prefWidth="75.0" text="Id" />
-                <TableColumn fx:id="colFechaCreacionEnvio" prefWidth="105.60003662109375" text="Fecha Creación" />
-                <TableColumn fx:id="colDestino" prefWidth="104.79998779296875" text="Destino" />
-                <TableColumn fx:id="colCostoEnvio" prefWidth="94.4000244140625" text="Costo" />
-                <TableColumn fx:id="colEstadoPagoEnvio" prefWidth="100.7999267578125" text="Estado Pago" />
-                <TableColumn fx:id="colEstadoEnvio" prefWidth="84.800048828125" text="Estado" />
-                <TableColumn fx:id="colNombreUsuario" prefWidth="107.20001220703125" text="Usuario" />
-                <TableColumn fx:id="colNombreRepartidor" prefWidth="114.40003967285156" text="Repartidor" />
+                <TableColumn fx:id="colIdEnvio" prefWidth="50.39999008178711" text="Id" />
+                <TableColumn fx:id="colFechaCreacionEnvio" prefWidth="100.0" text="Fecha Creación" />
+            <TableColumn fx:id="colFechaEntregaEnvio" prefWidth="100.0" text="Fecha Entrega" />
+                <TableColumn fx:id="colCostoEnvio" prefWidth="100.0" text="Costo" />
+                <TableColumn fx:id="colEstadoPagoEnvio" prefWidth="100.0" text="Estado Pago" />
+                <TableColumn fx:id="colEstadoEnvio" prefWidth="100.0" text="Estado" />
+                <TableColumn fx:id="colNombreUsuario" prefWidth="100.0" text="Usuario" />
+                <TableColumn fx:id="colNombreRepartidor" prefWidth="100.0" text="Repartidor" />
+                <TableColumn fx:id="colDestino" prefWidth="92.79998779296875" text="Destino" />
             </columns>
         </TableView>
         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#efefef" height="100.0" layoutX="15.0" layoutY="445.0" stroke="BLACK" strokeType="INSIDE" width="802.0" />
@@ -104,10 +105,10 @@
             <Button mnemonicParsing="false" onAction="#registrarIncidencia" prefHeight="26.0" prefWidth="131.0" text="Registrar Incidencia" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             </children>
         </GridPane>
-        <Button layoutX="580.0" layoutY="164.0" mnemonicParsing="false" onAction="#panelMetricas" prefHeight="26.0" prefWidth="228.0" text="Panel de Metricas" />
-        <Button layoutX="398.0" layoutY="556.0" mnemonicParsing="false" onAction="#limpiarCampos" prefHeight="26.0" prefWidth="86.0" text="Limpiar" />
-        <Label fx:id="lblMensaje" layoutX="26.0" layoutY="561.0" prefHeight="18.0" prefWidth="320.0" />
-        <Button layoutX="722.0" layoutY="557.0" mnemonicParsing="false" onAction="#cerrarSesion" text="Cerrar Sesión" />
+        <Button fx:id="btnMetricas" layoutX="581.0" layoutY="145.0" mnemonicParsing="false" onAction="#panelMetricas" prefHeight="26.0" prefWidth="228.0" text="Panel de Metricas" />
+        <Button layoutX="609.0" layoutY="556.0" mnemonicParsing="false" onAction="#limpiarCampos" prefHeight="26.0" prefWidth="86.0" text="Limpiar" />
+        <Label fx:id="lblMensaje" layoutX="26.0" layoutY="561.0" prefHeight="18.0" prefWidth="577.0" />
+        <Button layoutX="722.0" layoutY="556.0" mnemonicParsing="false" onAction="#cerrarSesion" text="Cerrar Sesión" />
       <Label layoutX="123.0" layoutY="27.0" prefHeight="22.0" prefWidth="228.0" text="Administrador Plataforma de Envios">
          <font>
             <Font name="System Bold" size="13.0" />
@@ -118,5 +119,6 @@
             <Font name="System Bold" size="13.0" />
          </font>
       </Label>
+      <ComboBox fx:id="cmbGenerarReportes" layoutX="581.0" layoutY="178.0" prefHeight="26.0" prefWidth="228.0" promptText="Generar Reportes Operativos" />
     </children>
 </AnchorPane>

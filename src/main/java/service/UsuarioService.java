@@ -129,14 +129,14 @@ public class UsuarioService {
         return listaEnviosDTOUsuario;
     }
 
-    public boolean actualizarEstadoEnvioUsuario(String usuarioId, String envioId, EstadoEnvio nuevoEstado){
+    public boolean actualizarEstadoEnvioUsuario(String usuarioId, String envioId){
         Usuario usuarioHallado = buscarUsuarioEntidad(usuarioId);
         if (usuarioHallado == null || usuarioHallado.getEnvios() == null) {
             return false;
         }
         for (Envio envio : usuarioHallado.getEnvios()){
             if (envio != null && envio.getId().equals(envioId)){
-                envio.setEstado(nuevoEstado);
+                envio.porAsignar();
                 return true;
             }
         }

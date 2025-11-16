@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.PanelMetricasController"
+            fitToWidth="true">
+
+    <VBox fx:id="container"
+          spacing="20"
+          style="-fx-padding:20;">
+    </VBox>
+
+</ScrollPane>
