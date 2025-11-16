@@ -105,30 +105,33 @@ public class EnvioService {
 
     public boolean modificarEnvioUsuario(String usuarioId, String envioId, EnvioDTO envioDTO) {
         Envio envio = buscarEnvioUsuarioEntity(usuarioId, envioId);
-        if (envio == null || envio.getEstado().equals("SOLICITADO") ||envio.getEstado().equals("POR_ASIGNAR")||envio.getEstado().equals("ASIGNADO")) { //Solo lo puedo modificar si es SOLICITADO
+        if (envio == null) { //Solo lo puedo modificar si es SOLICITADO
             return false;
         }
-        envio.setOrigen(envioDTO.getOrigen());
-        envio.setDestino(envioDTO.getDestino());
-        envio.setPeso(envioDTO.getPeso());
-        envio.setLargo(envioDTO.getLargo());
-        envio.setAncho(envioDTO.getAncho());
-        envio.setAlto(envioDTO.getAlto());
-        envio.setSeguro(envioDTO.isSeguro());
-        envio.setFragil(envioDTO.isFragil());
-        envio.setFirma(envioDTO.isFirma());
-        envio.setPrioridad(envioDTO.isPrioridad());
-        envio.setCosto(calcularCostoEnvio(envio));
-        return true;
+        if (envio.getEstado().equals("SOLICITADO")){
+            envio.setOrigen(envioDTO.getOrigen());
+            envio.setDestino(envioDTO.getDestino());
+            envio.setPeso(envioDTO.getPeso());
+            envio.setLargo(envioDTO.getLargo());
+            envio.setAncho(envioDTO.getAncho());
+            envio.setAlto(envioDTO.getAlto());
+            envio.setSeguro(envioDTO.isSeguro());
+            envio.setFragil(envioDTO.isFragil());
+            envio.setFirma(envioDTO.isFirma());
+            envio.setPrioridad(envioDTO.isPrioridad());
+            envio.setCosto(calcularCostoEnvio(envio));
+            return true;
+        }
+        return false;
     }
 
     public boolean cancelarEnvioUsuario(String usuarioId, String envioId) {
         Envio envio = buscarEnvioUsuarioEntity(usuarioId, envioId);
-        if (envio == null || envio.getEstado().equals("SOLICITADO") ||envio.getEstado().equals("POR_ASIGNAR")) {
+        if (envio == null) {
             return false;
         }
         Usuario usuario = usuarioService.buscarUsuarioEntidad(usuarioId);
-        if (usuario != null) {
+        if (usuario != null && envio.getEstado().equals("SOLICITADO")) {
             usuario.getEnvios().remove(envio);
             plataformaEnvios.getEnvios().remove(envio);
             return true;

@@ -113,6 +113,17 @@ public class AppSetup {
         envio7.setFechaEstimadaEntrega(LocalDateTime.parse("21/10/2025 00:00", formatter));
         envio7.setFechaEntrega(LocalDateTime.parse("01/11/2025 00:00", formatter));
 
+        DateTimeFormatter formatt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        Incidencia incidencia1 = new Incidencia("Envio en Camino");
+        Incidencia incidencia2 = new Incidencia("El repartidor se accidentó, lamentamos los inconvenientes");
+        Incidencia incidencia3 = new Incidencia("El envio retorna su camino nuevamente");
+        incidencia1.setFecha(LocalDateTime.parse("03/11/2025 00:00", formatt));
+        incidencia2.setFecha(LocalDateTime.parse("05/11/2025 00:00", formatt));
+        incidencia3.setFecha(LocalDateTime.parse("10/11/2025 00:00", formatt));
+        envio6.addIncidencia(incidencia1);
+        envio6.addIncidencia(incidencia2);
+        envio6.addIncidencia(incidencia3);
+
         plataformaEnvios.addUsuario(a1);
         plataformaEnvios.addUsuario(u1);
         plataformaEnvios.addUsuario(u2);

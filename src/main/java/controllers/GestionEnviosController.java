@@ -89,6 +89,7 @@ public class GestionEnviosController implements Initializable {
         envios = FXCollections.observableArrayList();
         direcciones = FXCollections.observableArrayList();
         idEnvio.setDisable(true);
+        costoEnvioDatos.setDisable(true);
         cargarDirecciones();
         configurarTabla();
         cargarEnvios();
