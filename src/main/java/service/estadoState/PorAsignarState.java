@@ -6,18 +6,15 @@ public class PorAsignarState implements EstadoEnvioState {
 
     @Override
     public void porAsignar(Envio envio) {
-        System.out.println("El envío ya fue ASIGNADO");
+        throw new IllegalStateException("El envío ya fue ASIGNADO");
     }
 
     @Override
     public void asignar(Envio envio) {
-        try {
-            if (envio.getNombreRepartidor() != null) {
-                envio.setEstado(new AsignadoState());
-            }
-        }catch (Exception e) {
-            throw new IllegalStateException("No ha asignado un repartidor aun", e);
+        if (envio.getNombreRepartidor() == null || envio.getNombreRepartidor().trim().isEmpty()) {
+            throw new IllegalStateException("No se ha asignado un repartidor al envío");
         }
+        envio.setEstado(new AsignadoState());
     }
 
     @Override

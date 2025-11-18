@@ -1,6 +1,7 @@
 package controllers;
 
-import javafx.beans.property.SimpleDoubleProperty;
+
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -50,8 +51,6 @@ public class PantallaPrincipalAdministradorController {
     @FXML    private ComboBox<EstadoEnvioState> cmbEstadoEnvio;
     @FXML    private Button btnMetricas;
     @FXML    private ComboBox<String> cmbGenerarReportes;
-
-
 
     @FXML    private TableView<EnvioDTO> tblEnvios;
     @FXML    private TableColumn<EnvioDTO, String> colIdEnvio;
@@ -177,12 +176,12 @@ public class PantallaPrincipalAdministradorController {
     }
 
     private void aplicarFiltros() {
-        tblEnvios.getSelectionModel().clearSelection();
+        listaEnviosFiltrados.clear();
+
         LocalDate desde = fechaCreacionDesde.getValue();
         LocalDate hasta = fechaCreacionHasta.getValue();
         EstadoEnvioState estadoSeleccionado = cmbEstadoEnvio.getValue();
 
-        listaEnviosFiltrados.clear();
 
         for (EnvioDTO envio : listaEnvios) {
             boolean coincide = true;
@@ -202,7 +201,10 @@ public class PantallaPrincipalAdministradorController {
                 listaEnviosFiltrados.add(envio);
             }
         }
-        tblEnvios.setItems(listaEnviosFiltrados);
+        Platform.runLater(() -> {
+            tblEnvios.setItems(listaEnviosFiltrados);
+            tblEnvios.getSelectionModel().clearSelection();
+        });
     }
 
     @FXML
@@ -242,8 +244,12 @@ public class PantallaPrincipalAdministradorController {
 
             if (adminFacade.registrarCambioEstado(envioSeleccionado.getId(),cmbCambioEstadoEnvio.getValue().getNombre())) {
                 mostrarMensaje("Se registro el cambio de estado al envio " +envioSeleccionado.getId(), false);
-                cmbEstadoEnvio.getSelectionModel().clearSelection();
-                tblEnvios.refresh();
+                Platform.runLater(() -> {
+                    tblEnvios.refresh();
+                    if (!cmbEstadoEnvio.getItems().isEmpty()) {
+                        cmbEstadoEnvio.getSelectionModel().clearSelection();
+                    }
+                });
                 envioSeleccionado.setEstado(cmbCambioEstadoEnvio.getValue().getNombre());
             } else {
                 mostrarMensaje("Error: No se pudo hacer el registro del cambio de estado al envio", true);

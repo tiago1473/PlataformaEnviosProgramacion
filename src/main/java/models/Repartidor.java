@@ -8,7 +8,6 @@ public class Repartidor {
     private String telefono;
     private EstadoRepartidor estado;
     private ArrayList<Envio> envios;
-    private int enviosAsignados;
     private ZonaCobertura zonaCobertura;
 
     public Repartidor(String id, String nombre,String telefono, EstadoRepartidor estado) {

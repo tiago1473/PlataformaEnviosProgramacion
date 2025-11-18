@@ -6,20 +6,19 @@ import java.time.LocalDateTime;
 
 public class EnvioBuilder {
 
-    Direccion origen;
-    Direccion destino;
-    double peso;
-    double largo;
-    double ancho;
-    double alto;
-    double costo;
-    EstadoEnvioState estado;
-    LocalDateTime fechaCreacion;
-    LocalDateTime fechaEstimadaEntrega;
-    boolean seguro;
-    boolean fragil;
-    boolean firma;
-    boolean prioridad;
+    public Direccion origen;
+    public Direccion destino;
+    public double peso;
+    public double largo;
+    public double ancho;
+    public double alto;
+    public EstadoEnvioState estado;
+    public LocalDateTime fechaCreacion;
+    public LocalDateTime fechaEstimadaEntrega;
+    public boolean seguro;
+    public boolean fragil;
+    public boolean firma;
+    public boolean prioridad;
 
     public EnvioBuilder(Direccion origen, Direccion destino, double peso, double largo,
                         double ancho, double alto) {

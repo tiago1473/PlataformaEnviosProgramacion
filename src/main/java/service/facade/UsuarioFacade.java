@@ -4,6 +4,7 @@ import models.DTO.EnvioDTO;
 import models.DTO.UsuarioDTO;
 import models.Direccion;
 import models.Usuario;
+import service.EnvioService;
 import service.UsuarioService;
 
 import java.util.ArrayList;
@@ -12,13 +13,11 @@ import java.util.List;
 public class UsuarioFacade {
 
     private final UsuarioService usuarioService;
+    private final EnvioService envioService;
 
     public UsuarioFacade(){
         this.usuarioService = new UsuarioService();
-    }
-
-    public ArrayList<UsuarioDTO> obtenerTodosLosUsuario (){
-        return usuarioService.obtenerTodosLosUsuario();
+        this.envioService = new EnvioService();
     }
 
     public UsuarioDTO buscarUsuarioId(String id){
@@ -31,10 +30,6 @@ public class UsuarioFacade {
 
     public boolean agregarUsuario(UsuarioDTO usuarioDTO){
         return usuarioService.agregarUsuario(usuarioDTO);
-    }
-
-    public boolean eliminarUsuario(String id){
-        return usuarioService.eliminarUsuario(id);
     }
 
     public boolean actualizarUsuario(UsuarioDTO usuarioDTO){
@@ -65,11 +60,11 @@ public class UsuarioFacade {
         return usuarioService.obtenerEnviosUsuario(id);
     }
 
-    public boolean actualizarEstadoEnvioUsuario(String usuarioId, String envioId){
-        return usuarioService.actualizarEstadoEnvioUsuario(usuarioId, envioId);
-    }
-
     public EnvioDTO buscarEnvioUsuario (String idUsuario, String idEnvio){
        return usuarioService.buscarEnvioUsuario(idUsuario, idEnvio);
+    }
+
+    public boolean procesarPagoEnvio(String id, double costo, String metodoPago) {
+        return envioService.procesarPago(id, costo, metodoPago);
     }
 }

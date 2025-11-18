@@ -60,9 +60,6 @@ public class UsuarioService {
         Usuario usuarioHallado = buscarUsuarioEntidad(id);
         if(usuarioHallado != null){
             this.plataformaEnvios.getUsuarios().remove(usuarioHallado);
-            for(Envio envio : usuarioHallado.getEnvios()){
-                this.plataformaEnvios.getEnvios().remove(envio);
-            }
             return true;
         }
         return false;

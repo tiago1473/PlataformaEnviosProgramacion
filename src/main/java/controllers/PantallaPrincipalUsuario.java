@@ -165,10 +165,16 @@ public class PantallaPrincipalUsuario implements Initializable {
     }
 
     private void cargarEnvios() {
+        cargarEnvios(true);
+    }
+    
+    private void cargarEnvios(boolean mostrarMensaje) {
         envios.clear();
         envios.addAll(usuarioFacade.obtenerEnviosUsuario(usuario.getId()));
         enviosFiltrados.setAll(envios); //se los mando todos a la lista de filtrados
-        mostrarMensaje("Envíos cargados: " + envios.size(), false);
+        if (mostrarMensaje) {
+            mostrarMensaje("Envíos cargados: " + envios.size(), false);
+        }
     }
 
     private void configurarFiltros() {
@@ -424,16 +430,16 @@ public class PantallaPrincipalUsuario implements Initializable {
             return;
         }
 
-        //Cambio el Modelo
-        boolean validacion = usuarioFacade.actualizarEstadoEnvioUsuario(usuario.getId(), envio.getId());
-        if (!validacion) {
-            mostrarMensaje("No fue posible actualizar el estado del envío en el modelo", true);
-            return;
+        if (usuarioFacade.procesarPagoEnvio(envio.getId(), envio.getCosto(), metodo)) {
+            cargarEnvios(false);
+            aplicarFiltros();
+            mostrarMensaje("Pago exitoso con " + metodo + ". Envío ahora POR ASIGNAR.", false);
+            txtIdEnvioParaPago.clear();
+            costoEnvioParaPago.clear();
+            metodoDePago.setValue(null);
+        } else {
+            mostrarMensaje("Error: No se pudo procesar el pago. Verifique los datos.", true);
         }
-        // Refresco la Lista desde el modelo y refresco pago por el nuevo estado
-        cargarEnvios();
-        aplicarFiltros();
-        mostrarMensaje("Pago exitoso con " + metodo + ". Envío ahora POR ASIGNAR.", false);
     }
 
     @FXML

@@ -16,7 +16,7 @@ public class EnvioService {
     public EnvioService(){
         this.plataformaEnvios = PlataformaEnvios.getInstancia();
         this.usuarioService = new UsuarioService();
-        this.calculadoraCostoEnvio = new CalculadoraCostoEnvio(this);
+        this.calculadoraCostoEnvio = new CalculadoraCostoEnvio();
     }
 
     public Envio crearEnvio(EnvioDTO envioDTO) {
@@ -173,6 +173,7 @@ public class EnvioService {
         switch (estadoEnvio) {
             case "ASIGNADO":
                 envio.asignar();
+                return true;
             case "EN_RUTA":
                 envio.enRuta();
                 return true;
@@ -182,5 +183,26 @@ public class EnvioService {
             default:
                 throw new IllegalArgumentException("Estado inválido: " + estadoEnvio);
         }
+    }
+
+    public boolean procesarPago(String idEnvio, double monto, String tipoMetodoPago) {
+        Envio envio = buscarEnvioEntity(idEnvio);
+        if (envio == null) {
+            return false;
+        }
+
+        if (!envio.getEstado().equals("SOLICITADO")) {
+            return false;
+        }
+
+        Pago pago = new Pago(monto,tipoMetodoPago,idEnvio);
+
+        if (pago.isAprobado()) {
+            plataformaEnvios.addPago(pago);
+            envio.porAsignar();
+            return true;
+        }
+
+        return false;
     }
 }

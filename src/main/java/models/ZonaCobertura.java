@@ -3,7 +3,7 @@ package models;
 
 public class ZonaCobertura {
     private Coordenada coordenada;
-    private final int radio=3;
+    private static final int RADIO=3;
 
     public ZonaCobertura(){
         this.coordenada=new Coordenada();
@@ -14,7 +14,7 @@ public class ZonaCobertura {
     }
 
     public int getRadio() {
-        return radio;
+        return RADIO;
     }
 
     public void setCoordenada(Coordenada coordenada) {

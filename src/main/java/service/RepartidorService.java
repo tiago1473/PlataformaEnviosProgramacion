@@ -79,8 +79,10 @@ public class RepartidorService {
             }
         }
         for (Envio envio : repartidor.getEnvios()){
-            envio.setNombreRepartidor(nuevoRepartidor.getNombre());
-            nuevoRepartidor.addEnvios(envio);
+            if (!envio.getEstado().equals("ENTREGADO")){
+                envio.setNombreRepartidor(nuevoRepartidor.getNombre());
+                nuevoRepartidor.addEnvios(envio);
+            }
         }
         plataformaEnvios.getRepartidores().remove(repartidor);
         return true;

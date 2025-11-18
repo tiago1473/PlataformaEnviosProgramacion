@@ -25,7 +25,6 @@ public class RegistroUsuarioController {
     @FXML private Label lblMensaje;
 
     private UsuarioFacade usuarioFacade;
-    private Stage stage;
 
     public void initialize() {
         usuarioFacade = new UsuarioFacade();

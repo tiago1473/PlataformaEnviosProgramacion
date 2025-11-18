@@ -1,15 +1,14 @@
 package service.costoAdicionalStrategy;
 import models.Envio;
 import service.EnvioService;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class CalculadoraCostoEnvio {
     private List<CostoAdicionalStrategy> estrategias;
-    private EnvioService envioService;
 
-    public CalculadoraCostoEnvio(EnvioService envioService) {
-        this.envioService = envioService;
+    public CalculadoraCostoEnvio() {
         this.estrategias = new ArrayList<>();
         inicializarEstrategias();
     }

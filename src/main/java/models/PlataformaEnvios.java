@@ -6,12 +6,14 @@ public class PlataformaEnvios {
     private ArrayList<Repartidor> repartidores;
     private ArrayList<UsuarioBase> usuarios;
     private ArrayList<Envio> envios;
+    private ArrayList<Pago> pagos;
     private static PlataformaEnvios instancia;
 
     private PlataformaEnvios() {
         repartidores = new ArrayList<>();
         usuarios = new ArrayList<>();
         envios = new ArrayList<>();
+        pagos = new ArrayList<>();
     }
 
     public static PlataformaEnvios getInstancia() {
@@ -53,5 +55,17 @@ public class PlataformaEnvios {
 
     public void setEnvios(ArrayList<Envio> envios) {
         this.envios = envios;
+    }
+
+    public ArrayList<Pago> getPagos() {
+        return pagos;
+    }
+
+    public void setPagos(ArrayList<Pago> pagos) {
+        this.pagos = pagos;
+    }
+
+    public void addPago(Pago pago) {
+        pagos.add(pago);
     }
 }
