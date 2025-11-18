@@ -285,19 +285,23 @@ public class GestionEnviosController implements Initializable {
     @FXML
     void cancelar(ActionEvent event) {
         if (envioSeleccionado == null) {
+            mostrarAlertaInformativa("Seleccione un envío para cancelar", Alert.AlertType.ERROR);
             mostrarMensaje("Seleccione un envío para cancelar", true);
             return;
         }
         if (!envioSeleccionado.getEstado().equals("SOLICITADO")) {
+            mostrarAlertaInformativa("Solo se pueden cancelar envios en estado SOLICITADO", Alert.AlertType.ERROR);
             mostrarMensaje("Solo se pueden cancelar envios en estado SOLICITADO", true);
             return;
         }
         boolean resultadoCancelacion = envioFacade.cancelarEnvioUsuario(usuarioLogueado.getId(), envioSeleccionado.getId());
         if (resultadoCancelacion) {
+            mostrarAlertaInformativa("Envío cancelado exitosamente", Alert.AlertType.CONFIRMATION);
             mostrarMensaje("Envío cancelado exitosamente", false);
             cargarEnvios();
             limpiarCampos();
         } else {
+            mostrarAlertaInformativa("Error al cancelar el envío, ya se encuentra en ruta o ya fue entregado", Alert.AlertType.ERROR);
             mostrarMensaje("Error al cancelar el envío, ya se encuentra en ruta o ya fue entregado", true);
         }
     }
@@ -306,7 +310,12 @@ public class GestionEnviosController implements Initializable {
     void cotizar(ActionEvent event) {
         EnvioDTO envioDTO = obtenerDatosFormulario();
         if (envioDTO == null) {
+            mostrarAlertaInformativa("Complete todos los campos correctamente (origen, destino, peso, dimensiones)", Alert.AlertType.ERROR);
             mostrarMensaje("Complete todos los campos correctamente (origen, destino, peso, dimensiones)", true);
+            return;
+        }
+        if(envioDTO.getPeso() <= 0 || envioDTO.getAncho() <= 0 || envioDTO.getLargo() <= 0 || envioDTO.getAlto() <= 0){
+            mostrarAlertaInformativa("Verifique Características del Envío. El Peso, Largo, Ancho y Alto no pueden ser valores menores o iguales a cero", Alert.AlertType.ERROR);
             return;
         }
         double costo = envioFacade.cotizarEnvio(envioDTO);
@@ -318,15 +327,22 @@ public class GestionEnviosController implements Initializable {
     void crear(ActionEvent event) {
         EnvioDTO envioDTO = obtenerDatosFormulario();
         if (envioDTO == null) {
+            mostrarAlertaInformativa("Complete todos los campos correctamente (origen, destino, peso, dimensiones)", Alert.AlertType.ERROR);
             mostrarMensaje("Complete todos los campos correctamente (origen, destino, peso, dimensiones)", true);
+            return;
+        }
+        if(envioDTO.getPeso() <= 0 || envioDTO.getAncho() <= 0 || envioDTO.getLargo() <= 0 || envioDTO.getAlto() <= 0){
+            mostrarAlertaInformativa("Verifique Características del Envío. El Peso, Largo, Ancho y Alto no pueden ser valores menores o iguales a cero", Alert.AlertType.ERROR);
             return;
         }
         boolean resultadoCreacion = envioFacade.crearEnvioUsuario(usuarioLogueado.getId(), envioDTO);
         if (resultadoCreacion) {
+            mostrarAlertaInformativa("Envío creado exitosamente. Estado: SOLICITADO", Alert.AlertType.CONFIRMATION);
             mostrarMensaje("Envío creado exitosamente. Estado: SOLICITADO", false);
             cargarEnvios();
             limpiarCampos();
         } else {
+            mostrarAlertaInformativa("Error al crear el envío", Alert.AlertType.ERROR);
             mostrarMensaje("Error al crear el envío", true);
         }
     }
@@ -356,24 +372,36 @@ public class GestionEnviosController implements Initializable {
 
     @FXML
     void modificar(ActionEvent event) {
+
         if (envioSeleccionado == null) {
+            mostrarAlertaInformativa("Seleccione un envío de la tabla para modificar", Alert.AlertType.ERROR);
             mostrarMensaje("Seleccione un envío de la tabla para modificar", true);
             return;
         }
 
         if (!envioSeleccionado.getEstado().equals("SOLICITADO")){
+            mostrarAlertaInformativa("Solo se pueden modificar envíos en estado SOLICITADO", Alert.AlertType.ERROR);
             mostrarMensaje("Solo se pueden modificar envíos en estado SOLICITADO", true);
             return;
         }
 
         EnvioDTO envioDTO = obtenerDatosFormulario();
+
         if (envioDTO == null) {
+            mostrarAlertaInformativa("Complete todos los campos correctamente (origen, destino, peso, dimensiones)", Alert.AlertType.ERROR);
             mostrarMensaje("Complete todos los campos correctamente (origen, destino, peso, dimensiones)", true);
+            return;
+        }
+
+        if (envioDTO.getPeso() <= 0 || envioDTO.getAncho() <= 0 || envioDTO.getLargo() <= 0 || envioDTO.getAlto() <= 0){
+            mostrarAlertaInformativa("Verifique Características del Envío. El Peso, Largo, Ancho y Alto no pueden ser valores menores o iguales a cero", Alert.AlertType.ERROR);
+            mostrarMensaje("Verifique Características del Envío. El Peso, Largo, Ancho y Alto no pueden ser valores menores o iguales a cero", true);
             return;
         }
 
         boolean resultadoActualizacion = envioFacade.modificarEnvioUsuario(usuarioLogueado.getId(), envioSeleccionado.getId(), envioDTO);
         if (resultadoActualizacion) {
+            mostrarAlertaInformativa("Envío modificado exitosamente", Alert.AlertType.CONFIRMATION);
             mostrarMensaje("Envío modificado exitosamente", false);
             cargarEnvios();
             // Recargo el envio seleccionado para mostrar su info
@@ -383,7 +411,23 @@ public class GestionEnviosController implements Initializable {
             }
         } else {
             mostrarMensaje("Error al modificar el envío. Verifique que el envío esté en estado SOLICITADO", true);
+            mostrarAlertaInformativa("Error al modificar el envío. Verifique que el envío esté en estado SOLICITADO", Alert.AlertType.ERROR);
         }
+    }
+
+    private void mostrarAlertaInformativa(String mensaje, Alert.AlertType tipo) {
+        Alert alerta = new Alert(tipo);
+        alerta.setTitle("Nuevo Mensaje: ");
+        alerta.setHeaderText(null);
+
+        if (mensaje == null) {
+            mensaje = "No hay información por mostrar";
+        }
+
+        alerta.setContentText(mensaje);
+        alerta.setResizable(true); //Permite que la ventana de la alerta se pueda redimensionar manualmente con el mouse
+        alerta.getDialogPane().setPrefWidth(500); //Ajusta el ancho preferido del panel interno del diálogo
+        alerta.showAndWait(); //Detiene la ejecución del programa hasta que el usuario la cierre
     }
 
     @FXML

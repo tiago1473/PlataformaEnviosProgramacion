@@ -411,10 +411,12 @@ public class PantallaPrincipalUsuario implements Initializable {
         String idEnvio = txtIdEnvioParaPago.getText() != null ? txtIdEnvioParaPago.getText().trim() : "";
         String metodo = metodoDePago.getValue();
         if (idEnvio.isEmpty()) {
+            mostrarAlertaInformativa("Ingrese o seleccione un envío para pagar", Alert.AlertType.ERROR);
             mostrarMensaje("Ingrese o seleccione un envío para pagar", true);
             return;
         }
         if (metodo == null || metodo.isEmpty()) {
+            mostrarAlertaInformativa("Seleccione un método de pago", Alert.AlertType.ERROR);
             mostrarMensaje("Seleccione un método de pago", true);
             return;
         }
@@ -422,10 +424,12 @@ public class PantallaPrincipalUsuario implements Initializable {
         EnvioDTO envio = usuarioFacade.buscarEnvioUsuario(usuario.getId(), idEnvio);
 
         if (envio == null) {
+            mostrarAlertaInformativa("Envío no encontrado", Alert.AlertType.ERROR);
             mostrarMensaje("Envío no encontrado", true);
             return;
         }
         if (!envio.getEstado().equals("SOLICITADO")) {
+            mostrarAlertaInformativa("Solo se pueden pagar envíos en estado SOLICITADO", Alert.AlertType.ERROR);
             mostrarMensaje("Solo se pueden pagar envíos en estado SOLICITADO", true);
             return;
         }
@@ -433,13 +437,30 @@ public class PantallaPrincipalUsuario implements Initializable {
         if (usuarioFacade.procesarPagoEnvio(envio.getId(), envio.getCosto(), metodo)) {
             cargarEnvios(false);
             aplicarFiltros();
+            mostrarAlertaInformativa("Pago exitoso con " + metodo + ". Envío ahora POR ASIGNAR.", Alert.AlertType.CONFIRMATION);
             mostrarMensaje("Pago exitoso con " + metodo + ". Envío ahora POR ASIGNAR.", false);
             txtIdEnvioParaPago.clear();
             costoEnvioParaPago.clear();
             metodoDePago.setValue(null);
         } else {
+            mostrarAlertaInformativa("Error: No se pudo procesar el pago. Verifique los datos.", Alert.AlertType.ERROR);
             mostrarMensaje("Error: No se pudo procesar el pago. Verifique los datos.", true);
         }
+    }
+
+    private void mostrarAlertaInformativa(String mensaje, Alert.AlertType tipo) {
+        Alert alerta = new Alert(tipo);
+        alerta.setTitle("Nuevo Mensaje: ");
+        alerta.setHeaderText(null);
+
+        if (mensaje == null) {
+            mensaje = "No hay información por mostrar";
+        }
+
+        alerta.setContentText(mensaje);
+        alerta.setResizable(true); //Permite que la ventana de la alerta se pueda redimensionar manualmente con el mouse
+        alerta.getDialogPane().setPrefWidth(500); //Ajusta el ancho preferido del panel interno del diálogo
+        alerta.showAndWait(); //Detiene la ejecución del programa hasta que el usuario la cierre
     }
 
     @FXML

@@ -137,6 +137,7 @@ public class GestionUsuarioController implements Initializable {
     void EliminarDireccion(ActionEvent event) {
         try {
             if (direccionSeleccionada == null) {
+                mostrarAlertaInformativa("Seleccione una Dirección de la tabla para eliminar", Alert.AlertType.ERROR);
                 mostrarMensaje("Seleccione una Dirección de la tabla para eliminar", true);
                 return;
             }
@@ -154,13 +155,16 @@ public class GestionUsuarioController implements Initializable {
                     obtenerUsuarioActualizado();
                     cargarDirecciones();
                     limpiarFormularioDirecciones(null);
+                    mostrarAlertaInformativa("Dirección eliminada exitosamente", Alert.AlertType.CONFIRMATION);
                     mostrarMensaje("Dirección eliminada exitosamente", false);
                     System.out.println("Dirección eliminada a: " + usuario.getId());
                 } else {
-                mostrarMensaje("Error: No se pudo eliminar la dirección", true);
+                    mostrarAlertaInformativa("Error: No se pudo eliminar la dirección", Alert.AlertType.ERROR);
+                    mostrarMensaje("Error: No se pudo eliminar la dirección", true);
                 }
             }
         } catch (Exception e) {
+            mostrarAlertaInformativa("Error al eliminar dirección: " + e.getMessage(), Alert.AlertType.ERROR);
             mostrarMensaje("Error al eliminar dirección: " + e.getMessage(), true);
             e.printStackTrace();
         }
@@ -192,13 +196,16 @@ public class GestionUsuarioController implements Initializable {
             if (usuarioFacade.actualizarDireccionUsuario(usuarioLogueado.getId(), direccionSeleccionada)) {
                 tableDirecciones.refresh(); //es como decir actualizar
                 cargarDirecciones();
+                mostrarAlertaInformativa("Dirección actualizada exitosamente", Alert.AlertType.CONFIRMATION);
                 mostrarMensaje("Dirección actualizada exitosamente", false);
                 System.out.println("Dirección actualizada");
                 limpiarFormularioDirecciones(null);
             } else {
+                mostrarAlertaInformativa("Error: No se pudo actualizar la dirección", Alert.AlertType.ERROR);
                 mostrarMensaje("Error: No se pudo actualizar la dirección", true);
             }
         } catch (Exception e) {
+            mostrarAlertaInformativa("Error al actualizar dirección: " + e.getMessage(), Alert.AlertType.ERROR);
             mostrarMensaje("Error al actualizar dirección: " + e.getMessage(), true);
             e.printStackTrace();
         }
@@ -233,13 +240,16 @@ public class GestionUsuarioController implements Initializable {
             if (usuarioFacade.agregarDireccionUsuario(usuarioLogueado.getId(), direccionDTO)) {
                 tableDirecciones.refresh(); //es como decir actualizar
                 cargarDirecciones();
+                mostrarAlertaInformativa("Dirección creada exitosamente", Alert.AlertType.CONFIRMATION);
                 mostrarMensaje("Dirección creada exitosamente", false);
                 System.out.println("Dirección creada");
                 limpiarFormularioDirecciones(null);
             } else {
+                mostrarAlertaInformativa("Error: No se pudo crear la dirección", Alert.AlertType.ERROR);
                 mostrarMensaje("Error: No se pudo crear la dirección", true);
             }
         } catch (Exception e) {
+            mostrarAlertaInformativa("Error al crear dirección: " + e.getMessage(), Alert.AlertType.ERROR);
             mostrarMensaje("Error al crear dirección: " + e.getMessage(), true);
             e.printStackTrace();
         }
@@ -261,12 +271,15 @@ public class GestionUsuarioController implements Initializable {
             if(usuarioFacade.actualizarUsuario(usuarioDTOActualizado)){
                 obtenerUsuarioActualizado();
                 cargarInformacionUsuario();
+                mostrarAlertaInformativa("Usuario actualizado exitosamente", Alert.AlertType.CONFIRMATION);
                 mostrarMensaje("Usuario actualizado exitosamente", false);
                 System.out.println("Usuario actualizado");
             }else {
+                mostrarAlertaInformativa("Error: No se pudo actualizar el usuario", Alert.AlertType.ERROR);
                 mostrarMensaje("Error: No se pudo actualizar el usuario", true);
             }
         }catch (Exception e) {
+            mostrarAlertaInformativa("Error al actualizar usuario: " + e.getMessage(), Alert.AlertType.ERROR);
             mostrarMensaje("Error al actualizar usuario: " + e.getMessage(), true);
             e.printStackTrace();
         }
@@ -301,6 +314,21 @@ public class GestionUsuarioController implements Initializable {
             e.printStackTrace();
             mostrarError("Error al cargar la pantalla. Intente nuevamente.");
         }
+    }
+
+    private void mostrarAlertaInformativa(String mensaje, Alert.AlertType tipo) {
+        Alert alerta = new Alert(tipo);
+        alerta.setTitle("Nuevo Mensaje: ");
+        alerta.setHeaderText(null);
+
+        if (mensaje == null) {
+            mensaje = "No hay información por mostrar";
+        }
+
+        alerta.setContentText(mensaje);
+        alerta.setResizable(true); //Permite que la ventana de la alerta se pueda redimensionar manualmente con el mouse
+        alerta.getDialogPane().setPrefWidth(500); //Ajusta el ancho preferido del panel interno del diálogo
+        alerta.showAndWait(); //Detiene la ejecución del programa hasta que el usuario la cierre
     }
 
     private void mostrarError(String mensaje) {

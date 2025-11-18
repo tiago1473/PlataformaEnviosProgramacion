@@ -1,4 +1,5 @@
 package service;
+import javafx.scene.control.Alert;
 import models.*;
 import models.DTO.EnvioDTO;
 import service.costoAdicionalStrategy.CalculadoraCostoEnvio;
@@ -108,6 +109,7 @@ public class EnvioService {
         if (envio == null) { //Solo lo puedo modificar si es SOLICITADO
             return false;
         }
+
         if (envio.getEstado().equals("SOLICITADO")){
             envio.setOrigen(envioDTO.getOrigen());
             envio.setDestino(envioDTO.getDestino());
@@ -190,11 +192,9 @@ public class EnvioService {
         if (envio == null) {
             return false;
         }
-
         if (!envio.getEstado().equals("SOLICITADO")) {
             return false;
         }
-
         Pago pago = new Pago(monto,tipoMetodoPago,idEnvio);
 
         if (pago.isAprobado()) {
